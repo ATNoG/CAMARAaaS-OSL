@@ -1,0 +1,41 @@
+apiVersion: av.it.pt/v1
+kind: CAMARAaaS-QoDProvisiongAPI
+metadata:
+  name: example-qod-provisioning-with-examples
+spec:
+  messageBroker:
+    url: "https://message-broker.example.com"
+    username: "brokerUser" # Replace with Secret if adapted
+    password: "brokerPassword" # Replace with Secret if adapted
+  serviceUnderControl:
+    uuid: "123e4567-e89b-12d3-a456-426614174000"
+  camaraAPI:
+    url: "https://camara-api.example.com"
+    username: "apiUser" # Replace with Secret if adapted
+    password: "apiPassword" # Replace with Secret if adapted
+    results:
+      - device:
+          ipv4Address:
+            publicAddress: "203.0.113.0"
+            privateAddress: "192.168.1.100"
+            privatePort: 5000
+          ipv6Address: "2001:db8::ff00:42:8329"
+          phoneNumber: "+123456789"
+          networkAccessIdentifier: "device@example.com"
+        qosProfile: "QOS_L"
+        sink: "https://client-sink.example.com"
+        sinkCredential:
+          credentialType: "ACCESSTOKEN"
+        provisioningId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        startedAt: "2024-05-12T17:32:01Z"
+        status: "AVAILABLE"
+        statusInfo: "DELETE_REQUESTED"
+      - device:
+          ipv4Address:
+            publicAddress: "198.51.100.0"
+        qosProfile: "QOS_M"
+        sink: "https://another-client-sink.example.com"
+        provisioningId: "2fa85f64-5717-4562-b3fc-2c963f66afa6"
+        startedAt: "2024-06-01T12:00:00Z"
+        status: "UNAVAILABLE"
+        statusInfo: "NETWORK_TERMINATED"
