@@ -1,0 +1,22 @@
+apiVersion: av.it.pt/v1
+kind: NetworkSliceQoDProfile
+metadata:
+  name: example-network-slice-qod-profile
+  namespace: default
+spec:
+  qodProv:
+    device:
+      phoneNumber: "+123456789"
+      networkAccessIdentifier: "123456789@domain.com"
+      ipv4Address:
+        publicAddress: "203.0.113.0"
+        publicPort: 59765
+      ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+    qosProfile: "QCI_1_voice"
+    sink: "https://endpoint.example.com/sink"
+    sinkCredential: {}
+  camaraLastRequest: "2024-12-07T10:15:30Z"
+  camaraResults:
+    - result1
+    - result2
+    - result3
