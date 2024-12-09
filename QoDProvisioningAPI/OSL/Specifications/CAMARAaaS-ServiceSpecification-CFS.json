@@ -1,0 +1,157 @@
+{
+    "isBundle": null,
+    "description": "CAMARAaaS - QoD Provisioning API (CFS)",
+    "lifecycleStatus": "In design",
+    "name": "CAMARAaaS - QoD Provisioning API (CFS)",
+    "validFor": {
+        "endDateTime": "2043-12-31T23:59:59.999Z",
+        "startDateTime": "2024-01-01T00:00:00.001Z"
+    },
+    "version": "0.1.0",
+    "serviceSpecCharacteristic": [
+        {
+            "name": "messageBroker.url",
+            "configurable": true,
+            "description": "OSL's ActiveMQ URL",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 1,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "messageBroker.username",
+            "configurable": true,
+            "description": "OSL's ActiveMQ Username",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "messageBroker.password",
+            "configurable": true,
+            "description": "OSL's ActiveMQ Password",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "serviceUnderControl.uuid",
+            "configurable": true,
+            "description": "UUID of the running Service (in the Inventory) that will be controlled through the CAMARAaaS QoD Provisioning API",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 1,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "camaraAPI.url",
+            "configurable": false,
+            "description": "URL of the CAMARA API orchestrated by this service (view-only). This field will be automatically populated when the CAMARA API starts running",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 1,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "camaraAPI.username",
+            "configurable": false,
+            "description": "Username of the CAMARA API orchestrated by this service (view-only). This field will be automatically populated when the CAMARA API starts running",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 1,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "camaraAPI.password",
+            "configurable": false,
+            "description": "Password of the CAMARA API orchestrated by this service (view-only). This field will be automatically populated when the CAMARA API starts running",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 1,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "camaraAPI.Results",
+            "configurable": false,
+            "description": "This characteristic (view-only) will be populated with the successful operations that took place",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "camaraAPI.status",
+            "configurable": false,
+            "description": "This characteristic (view-only) will be populated with the CAMARA API status (RUNNING, NOT_RUNNING)",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        }
+    ]
+}

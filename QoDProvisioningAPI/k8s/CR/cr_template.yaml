@@ -1,7 +1,7 @@
 apiVersion: av.it.pt/v1
 kind: CAMARAaaS-QoDProvisiongAPI
 metadata:
-  name: %s
+  name: _to_replace_
 spec:
   messageBroker:
     url: "%s"
@@ -9,7 +9,7 @@ spec:
     password: "%s"
   serviceUnderControl:
     uuid: "%s"
-  camaraAPI:
-    url: "%s"
-    username: "%s"
-    password: "%s"
+#  camaraAPI:
+#    url: "%s"
+#    username: "%s"
+#    password: "%s"

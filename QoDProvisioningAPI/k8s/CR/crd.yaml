@@ -22,6 +22,8 @@ spec:
             spec:
               type: object
               properties:
+                status:
+                  type: string
                 messageBroker:
                   type: object
                   properties:
@@ -49,6 +51,12 @@ spec:
                 camaraAPI:
                   type: object
                   properties:
+                    status:
+                      type: string
+                      default: "NOT_RUNNING"
+                      enum:
+                        - "RUNNING"
+                        - "NOT_RUNNING"
                     url:
                       type: string
                       default: Yet To Be Configured
