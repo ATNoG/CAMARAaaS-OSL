@@ -1,0 +1,20 @@
+apiVersion: av.it.pt/v1
+kind: UEQoDProfile
+metadata:
+  name: ue-qod-profile
+  namespace: default
+spec:
+  qodProv:
+    device:
+      phoneNumber: "+123456789"
+      networkAccessIdentifier: "123456789@domain.com"
+      ipv4Address:
+        publicAddress: "203.0.113.0"
+        privateAddress: "192.168.1.100"
+        privatePort: 5000
+      ipv6Address: "2001:db8::ff00:42:8329"
+    qosProfile: "QOS_L"
+    sink: "https://endpoint.example.com/sink"
+    sinkCredential: 
+      credentialType: "PLAIN"
+  camaraLastRequest: "2024-12-07T10:15:30Z"
