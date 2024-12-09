@@ -1,0 +1,21 @@
+# @Author: Eduardo Santos
+# @Date:   2024-11-28 10:13:05
+# @Last Modified by:   Eduardo Santos
+# @Last Modified time: 2024-11-28 12:17:47
+
+version: '3.6'
+services:
+  service:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8080
+    environment:
+      - SQLITE_DB_PATH=/data/sqlite.db  # Environment variable to define SQLite DB path
+    volumes:
+      - sqlite_data:/data  # Volume to persist SQLite database
+
+volumes:
+  sqlite_data:
+    driver: local
