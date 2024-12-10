@@ -133,7 +133,7 @@ spec:
                           - NETWORK_TERMINATED
                           - DELETE_REQUESTED
               required:
-                - qodProv
+                - ITAvSliceManager
             status:
               type: object
   scope: Namespaced
