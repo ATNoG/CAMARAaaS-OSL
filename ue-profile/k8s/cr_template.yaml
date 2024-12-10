@@ -7,7 +7,7 @@ spec:
   qodProv:
     device:
       phoneNumber: "%s"
-      networkAccessIdentifier: %
+      networkAccessIdentifier: "%s"
       ipv4Address:
         publicAddress: "%s"
         privateAddress: "%s"

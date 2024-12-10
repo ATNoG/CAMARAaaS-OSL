@@ -1,356 +1,115 @@
 {
-    "uuid": "6cd12512-d555-4303-991b-cece7140e0fa",
-    "lastUpdate": "2024-12-09T19:29:56.736378Z",
-    "@baseType": "BaseEntity",
-    "@schemaLocation": null,
-    "@type": "CustomerFacingServiceSpecification",
-    "href": null,
     "name": "CAMARAaaS - UE Profile Enforcer (CFS)",
     "description": "CAMARAaaS - UE Profile Enforcer (CFS)",
     "lifecycleStatus": "In design",
     "version": "0.1.0",
     "validFor": {
-        "endDateTime": "2044-12-09T15:27:16.059Z",
-        "startDateTime": "2024-12-09T15:27:16.059Z"
+        "endDateTime": "2043-12-31T23:59:59.999Z",
+        "startDateTime": "2024-01-01T00:00:00.001Z"
     },
-    "isBundle": true,
-    "attachment": [],
-    "relatedParty": [
-        {
-            "uuid": "18cf69a2-795b-4053-8fe8-e76e8ddb6556",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.prm669.model.RelatedParty",
-            "href": null,
-            "name": "admin",
-            "role": "OWNER",
-            "@referredType": "SimpleUsername_Individual",
-            "id": "admin",
-            "extendedInfo": ""
-        }
-    ],
-    "resourceSpecification": [],
-    "serviceLevelSpecification": [],
+    "isBundle": null,
     "serviceSpecCharacteristic": [
         {
-            "uuid": "03f9c2e8-dcd5-4420-94f5-32852ed0a08d",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
-            "name": "SSPEC_GRAPH_NOTATION",
-            "configurable": false,
-            "description": "SSPEC_GRAPH_NOTATION",
-            "extensible": null,
-            "isUnique": null,
-            "maxCardinality": 1,
-            "minCardinality": 1,
-            "regex": null,
-            "valueType": "LONGTEXT",
-            "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "a202407e-1ee3-4cc4-bc6d-c8b9f87bd2d7",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": true,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": "N/A",
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": null,
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:35:59.724746Z",
-                        "startDateTime": "2024-12-09T15:35:59.724745Z"
-                    },
-                    "value": {
-                        "value": "blockdiag {default_textcolor = white;\r\ndefault_fontsize = 12;\r\n\r\n\"6cd12512-d555-4303-991b-cece7140e0fa\" -> \"c961670f-a8a1-4ad8-b9e0-cff8465cb628\" ;\r\n\"c961670f-a8a1-4ad8-b9e0-cff8465cb628\" -> \"7ed4f2e9-3830-4d92-a0d9-cfb7fc86042e\";\r\n\"7ed4f2e9-3830-4d92-a0d9-cfb7fc86042e\" [ label = \"UEQoDProfile@av.it.pt/v1@default@https://10.255.28.64:6443/\", shape = roundedbox, color = \"#e28743\"]; \"c961670f-a8a1-4ad8-b9e0-cff8465cb628\" [ label = \"CAMARAaaS - UE Profile Enforcer (RFS)\", color = \"#2596be\"]; \"6cd12512-d555-4303-991b-cece7140e0fa\" [ label = \"CAMARAaaS - UE Profile Enforcer (CFS)\", color = \"#2596be\"]; }",
-                        "alias": "SSPEC_GRAPH_NOTATION"
-                    }
-                }
-            ],
-            "validFor": null,
-            "@valueSchemaLocation": null,
-            "id": "03f9c2e8-dcd5-4420-94f5-32852ed0a08d"
-        },
-        {
-            "uuid": "aaaf0e37-ac8a-4074-a71f-d8c804dc81bb",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.qosProfile",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "6362350c-bd5c-4063-bca5-32045fc0684b",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:39:17.076519Z",
-                        "startDateTime": "2024-12-09T15:39:17.076518Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:39:12.956Z",
-                "startDateTime": "2024-12-09T15:39:12.956Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "aaaf0e37-ac8a-4074-a71f-d8c804dc81bb"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "e8eee617-3d7b-4e02-bebc-048e6cd55d3d",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.device.ipv4Address.privateAddress",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "ef0d06c5-884d-4d31-9755-0c29f8fa4215",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:38:25.675181Z",
-                        "startDateTime": "2024-12-09T15:38:25.675180Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:38:19.496Z",
-                "startDateTime": "2024-12-09T15:38:19.496Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "e8eee617-3d7b-4e02-bebc-048e6cd55d3d"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "ede36302-12ed-4db9-aba8-8f38560c7570",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.device.phoneNumber",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "d3b630d0-31a9-40ea-b095-3c1db799a746",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:39:07.881259Z",
-                        "startDateTime": "2024-12-09T15:39:07.881258Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:39:02.817Z",
-                "startDateTime": "2024-12-09T15:39:02.817Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "ede36302-12ed-4db9-aba8-8f38560c7570"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "195af9d5-9a1a-46e1-a2bb-8879cb582ad8",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.sink",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "0fb0d511-b502-4d03-95e6-7a30eb0d8845",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:39:24.810190Z",
-                        "startDateTime": "2024-12-09T15:39:24.810189Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:39:21.758Z",
-                "startDateTime": "2024-12-09T15:39:21.758Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "195af9d5-9a1a-46e1-a2bb-8879cb582ad8"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "40b7d9d9-003c-4215-95b0-c8228ea39354",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "camaraResults",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "608ef018-6239-403c-88b3-aac743921243",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:37:58.115911Z",
-                        "startDateTime": "2024-12-09T15:37:58.115910Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:37:53.451Z",
-                "startDateTime": "2024-12-09T15:37:53.451Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "40b7d9d9-003c-4215-95b0-c8228ea39354"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "7e065d64-e8a9-4bf5-b3b9-b0118333a089",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.device.ipv4Address.privatePort",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "INTEGER",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "1512ad13-c13d-436c-9d34-82942c7c66b8",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "INTEGER",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:40:26.153401Z",
-                        "startDateTime": "2024-12-09T15:40:26.153400Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:40:22.660Z",
-                "startDateTime": "2024-12-09T15:40:22.660Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "7e065d64-e8a9-4bf5-b3b9-b0118333a089"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "14be297a-9e5a-4432-a1c8-d3011068ccfd",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.device.ipv4Address.publicAddress",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
@@ -358,203 +117,73 @@
             "serviceSpecCharRelationship": [],
             "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:38:32.489Z",
-                "startDateTime": "2024-12-09T15:38:32.489Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "14be297a-9e5a-4432-a1c8-d3011068ccfd"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "c588bf48-62af-4b25-8c81-2dae2aa7eaea",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.sinkCredential.credentialType",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "21febea1-5aa8-443c-9b74-345b9c251b9f",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:39:37.612087Z",
-                        "startDateTime": "2024-12-09T15:39:37.612087Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:39:30.989Z",
-                "startDateTime": "2024-12-09T15:39:30.989Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "c588bf48-62af-4b25-8c81-2dae2aa7eaea"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "3de08a8a-f0b9-4c25-bda0-c55ee2d5ca37",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.device.networkAccessIdentifier",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "de99e438-4aa0-4bad-befe-487a07a66b9e",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:38:57.645285Z",
-                        "startDateTime": "2024-12-09T15:38:57.645284Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:38:53.551Z",
-                "startDateTime": "2024-12-09T15:38:53.551Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "3de08a8a-f0b9-4c25-bda0-c55ee2d5ca37"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "b42549a5-ba6a-4382-ba7e-031bb14ef3b4",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "camaraLastRequest",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "c14827a4-9e42-49a1-be1b-4c00e5993b19",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:35:59.725840Z",
-                        "startDateTime": "2024-12-09T15:35:59.725839Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:35:21.043Z",
-                "startDateTime": "2024-12-09T15:35:21.043Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "b42549a5-ba6a-4382-ba7e-031bb14ef3b4"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         },
         {
-            "uuid": "c4b3b647-1557-4862-b559-3b0067dc2dfb",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecCharacteristic",
-            "href": null,
             "name": "qodProv.device.ipv6Address",
             "configurable": null,
             "description": null,
             "extensible": null,
-            "isUnique": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
             "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [
-                {
-                    "uuid": "4017d9d9-10e4-4178-8255-6b18efb628a6",
-                    "@baseType": "BaseEntity",
-                    "@schemaLocation": null,
-                    "@type": null,
-                    "href": null,
-                    "isDefault": false,
-                    "rangeInterval": null,
-                    "regex": null,
-                    "unitOfMeasure": null,
-                    "valueFrom": null,
-                    "valueTo": null,
-                    "valueType": "TEXT",
-                    "validFor": {
-                        "endDateTime": "2044-12-09T15:38:47.182465Z",
-                        "startDateTime": "2024-12-09T15:38:47.182464Z"
-                    },
-                    "value": null
-                }
-            ],
+            "serviceSpecCharacteristicValue": [],
             "validFor": {
-                "endDateTime": "2044-12-09T15:38:42.536Z",
-                "startDateTime": "2024-12-09T15:38:42.536Z"
-            },
-            "@valueSchemaLocation": null,
-            "id": "c4b3b647-1557-4862-b559-3b0067dc2dfb"
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         }
-    ],
-    "serviceSpecRelationship": [
-        {
-            "uuid": "9ba49f31-8cb1-416f-a5df-56dd2ff673b6",
-            "@baseType": "BaseRootEntity",
-            "@schemaLocation": null,
-            "@type": "org.etsi.osl.tmf.scm633.model.ServiceSpecRelationship",
-            "href": null,
-            "name": "CAMARAaaS - UE Profile Enforcer (RFS)",
-            "id": "c961670f-a8a1-4ad8-b9e0-cff8465cb628",
-            "relationshipType": null,
-            "role": null,
-            "validFor": null
-        }
-    ],
-    "targetServiceSchema": null,
-    "id": "6cd12512-d555-4303-991b-cece7140e0fa"
+    ]
 }
