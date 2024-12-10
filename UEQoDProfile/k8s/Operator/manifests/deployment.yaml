@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nslice-ue-op-deployment
+  name: nslice-qod-ue-op-deployment
   namespace: itav-slice-manager-client
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nslice-ue-op
+      app: nslice-qod-ue-op
   template:
     metadata:
       labels:
-        app: nslice-ue-op
+        app: nslice-qod-ue-op
     spec:
-      serviceAccountName: nslice-ue-op
+      serviceAccountName: nslice-qod-ue-op
       containers:
-        - name: nslice-ue-op-container
-          image: atnog-harbor.av.it.pt/atnog/nslice-ue-op
+        - name: nslice-qod-ue-op-container
+          image: atnog-harbor.av.it.pt/atnog/nslice-qod-ue-op
           command: ["python", "k8s_operator.py"] 
           env:
             - name: LOG_LEVEL

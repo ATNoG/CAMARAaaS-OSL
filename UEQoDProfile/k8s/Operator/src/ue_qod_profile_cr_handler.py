@@ -43,23 +43,31 @@ class UEQoDProfileCRHandler:
             
         elif event == "UPDATE":
             logger.info(
-            f"A resource with group: {Config.cr_group}, "
-            f"version: {Config.cr_version}, plural: {Config.cr_plural} "
-            f"was UPDATED. This resource is named '{cr_name}' and was "
-            f"deployed in namespace '{cr_namespace}'. "
-            f"Resource: {spec}"
-        )
-        
-        # If there is not a new profile to apply, stop
-        if not spec["qodProv"]["newQoDProvToApply"]:
-            logger.info("It is not required to provision a new QoD profile.")
-            return
-        
-        tmp_result = self._spec_qod_prov_to_tmp_result(spec)
+                f"A resource with group: {Config.cr_group}, "
+                f"version: {Config.cr_version}, plural: {Config.cr_plural} "
+                f"was UPDATED. This resource is named '{cr_name}' and was "
+                f"deployed in namespace '{cr_namespace}'. "
+                f"Resource: {spec}"
+            )
+            # If there is not a new profile to apply, stop
+            if "qodProv" not in spec \
+            or "newQoDProvToApply" not in spec["qodProv"] \
+            or not spec["qodProv"]["newQoDProvToApply"]:
+                logger.info(
+                    "It is not required to provision a new QoD profile."
+                )
+                return
+            
+            tmp_result = self._spec_qod_prov_to_tmp_result(spec)
 
-        self._process_qod_provisioning_request(
-            cr_namespace, cr_name, spec, tmp_result
-        )
+            self._process_qod_provisioning_request(
+                cr_namespace, cr_name, spec, tmp_result
+            )
+        
+        
+        
+        
+        
         
                 
             

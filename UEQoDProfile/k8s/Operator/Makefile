@@ -13,6 +13,9 @@ REPOSITORY_HOST = atnog-harbor.av.it.pt/atnog
 KUBECONFIG ?= /etc/rancher/k3s/k3s.yaml 
 NAMESPACE = itav-slice-manager-client
 
+PATCH_CONTENT_INVALID='{"spec": {"qodProv": {"newQoDProvToApply": true, "provisioningId": "12345678-1234-1234-1234-123456789abc", "device": {"phoneNumber": "+987654321", "networkAccessIdentifier": "987654321@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.0", "privateAddress": "192.168.1.200", "privatePort": 6000}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_D"}}}'
+
+
 
 # DOCKER
 
@@ -67,10 +70,16 @@ delete-crd:
 	kubectl delete -f ../CR/crd.yaml || true
 
 create-cr:
-	kubectl apply -f ../CR/cr.yaml
+	kubectl apply -f ../CR/cr_init.yaml
 
 delete-cr:
-	kubectl delete -f ../CR/cr.yaml || true
+	kubectl delete -f ../CR/cr_init.yaml || true
+
+describe-cr:
+	kubectl describe ue-qod-profiles ue-qod-profile-init
+
+patch-cr-invalid: 
+	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_INVALID)
 
 recreate-cr: delete-cr create-cr
 recreate-crd: delete-crd create-crd
@@ -91,4 +100,3 @@ recreate-crd: delete-crd create-crd
 #---
 #---uninstall-operator:
 #---	helm uninstall --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) --namespace $(NAMESPACE)
-
