@@ -15,9 +15,34 @@ spec:
             spec:
               type: object
               properties:
+                status:
+                  type: string
+                  default: NOT_RUNNING
+                  enum:
+                    - "RUNNING"
+                    - "NOT_RUNNING"
+                ITAvSliceManager:
+                  type: object
+                  properties:
+                    slice: 
+                      type: string
+                    profiles:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          AMBRUP:
+                            type: integer
+                          AMBRDW:
+                            type: integer
                 qodProv:
                   type: object
                   properties:
+                    newQoDProvToApply:
+                      type: boolean
+                      default: False
+                    provisioningId:
+                      type: string
                     device:
                       type: object
                       properties:

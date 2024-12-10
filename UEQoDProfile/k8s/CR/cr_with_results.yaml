@@ -4,7 +4,18 @@ metadata:
   name: ue-qod-profile
   namespace: default
 spec:
+  ITAvSliceManager:
+    slice: my_slice
+    profiles:
+    - profileName: "profile1"
+      AMBRUP: 1000
+      AMBRDW: 500
+    - profileName: "profile2"
+      AMBRUP: 2000
+      AMBRDW: 1000
   qodProv:
+    newQoDProvToApply: true
+    provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     device:
       phoneNumber: "+123456789"
       networkAccessIdentifier: "123456789@domain.com"

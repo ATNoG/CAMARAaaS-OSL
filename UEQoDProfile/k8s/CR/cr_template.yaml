@@ -5,9 +5,11 @@ metadata:
   namespace: default
 spec:
   qodProv:
+    newQoDPovToApply: %s
+    provisioningId: %s
     device:
       phoneNumber: %s
-      networkAccessIdentifier: %
+      networkAccessIdentifier: %s
       ipv4Address:
         publicAddress: %s
         privateAddress: %s
