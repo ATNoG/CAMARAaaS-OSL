@@ -24,6 +24,10 @@ spec:
               properties:
                 status:
                   type: string
+                  default: NOT_RUNNING
+                  enum:
+                    - "RUNNING"
+                    - "NOT_RUNNING"
                 messageBroker:
                   type: object
                   properties:
