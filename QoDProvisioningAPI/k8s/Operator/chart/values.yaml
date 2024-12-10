@@ -1,0 +1,15 @@
+kubernetesClusterDomain: cluster.local
+deployment:
+  image:
+    repository: atnog-harbor.av.it.pt/camaraaas/camaraaas-qod-provisioning-api-op
+    tag: latest
+  replicas: 1
+customResource:
+  group: av.it.pt
+  singular: camaraaas-qod-provisioning-api
+  plural: camaraaas-qod-provisioning-apis
+  kind: CAMARAaaS-QoDProvisiongAPI
+  shortNames:
+    - qod-provisioning-api
+  version: v1
+logLevel: INFO
