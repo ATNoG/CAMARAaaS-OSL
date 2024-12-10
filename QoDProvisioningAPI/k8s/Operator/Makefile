@@ -1,14 +1,14 @@
 # Variables
-LOCAL_IMAGE_NAME = ns-ue-operator
+LOCAL_IMAGE_NAME = camaraaas-qod-provisioning-api-op-operator
 LOCAL_TAG = latest
 
-DOCKER_REPOSITORY_IMAGE_NAME = nslice-ue-op
+DOCKER_REPOSITORY_IMAGE_NAME = camaraaas-qod-provisioning-api-op
 DOCKER_REPOSITORY_TAG = latest
-HELM_CHART_NAME = nslice-ue-op-chart
-REPOSITORY_HOST = atnog-harbor.av.it.pt/atnog
+REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 
-HELM_CHART_NAME = nslice-ue-op-chart
-REPOSITORY_HOST = atnog-harbor.av.it.pt/atnog
+HELM_CHART_DIR = chart
+HELM_CHART_NAME = camaraaas-qod-provisioning-api-op-chart
+REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 
 KUBECONFIG ?= /etc/rancher/k3s/k3s.yaml 
 NAMESPACE = itav-slice-manager-client
@@ -16,22 +16,22 @@ NAMESPACE = itav-slice-manager-client
 
 # DOCKER
 #
-#docker-build:
-#	docker build -t $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) .
-#
-#docker-tag:
-#	docker tag $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
-#
-#docker-push:
-#	docker push $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
-#
-#docker-clean:
-#	docker image prune -f
-#
-#docker-remove:
-#	docker rmi $(LOCAL_IMAGE_NAME):$(LOCAL_TAG)
-#
-#docker: docker-build docker-tag docker-push
+docker-build:
+	docker build -t $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) .
+
+docker-tag:
+	docker tag $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
+
+docker-push:
+	docker push $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
+
+docker-clean:
+	docker image prune -f
+
+docker-remove:
+	docker rmi $(LOCAL_IMAGE_NAME):$(LOCAL_TAG)
+
+docker: docker-build docker-tag docker-push
 
 
 # Local Testing
@@ -46,17 +46,17 @@ run-local:
 
 
 # K8S Manifests
-#create-operator:
-#	kubectl apply -f ./cr/crd.yaml && kubectl apply -f ./k8s/operator-namespace.yaml && kubectl apply -f ./k8s/
-#
-#get-operator-pods:
-#	kubectl get pods -n $(NAMESPACE) -l app=nslice-ue-op -o jsonpath="{.items[0].metadata.name}" 
-#
-#get-operator-logs:
-#	kubectl logs -f $$(kubectl get pods -n $(NAMESPACE)  -l app=nslice-ue-op -o jsonpath="{.items[0].metadata.name}") -n $(NAMESPACE) 
-#
-#delete-operator:
-#	kubectl delete -f ./k8s || true
+create-operator:
+	kubectl apply -f ../CR/crd.yaml && kubectl apply -f ./manifests/operator-namespace.yaml && kubectl apply -f ./manifests/
+
+get-operator-pods:
+	kubectl get pods -n $(NAMESPACE) -l app=camaraaas-qod-provisioning-api-op -o jsonpath="{.items[0].metadata.name}" 
+
+get-operator-logs:
+	kubectl logs -f $$(kubectl get pods -n $(NAMESPACE)  -l app=camaraaas-qod-provisioning-api-op -o jsonpath="{.items[0].metadata.name}") -n $(NAMESPACE) 
+
+delete-operator:
+	kubectl delete -f ./manifests || true
 
 
 # K8S Custom Resource
@@ -76,19 +76,19 @@ recreate-crd: delete-crd create-crd
 recreate-cr: delete-cr create-cr
 
 # HELM
-#helm-package:
-#	helm package $(HELM_CHART_NAME)
-#
-#helm-push:
-#	helm push $(HELM_CHART_NAME)-0.1.0.tgz  oci://$(REPOSITORY_HOST)
-#
-#helm: helm-package helm-push
-#
+helm-package:
+	helm package $(HELM_CHART_DIR)
+
+helm-push:
+	helm push $(HELM_CHART_NAME)-0.1.0.tgz  oci://$(REPOSITORY_HOST)
+
+helm: helm-package helm-push
+
 
 # Deploy Operator
-#install-operator:
-#	helm install --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) oci://$(REPOSITORY_HOST)/$(HELM_CHART_NAME) --version 0.1.0 --set sliceManagerBaseUrl=http://10.255.28.141:8000 --namespace $(NAMESPACE) --create-namespace
-#
-#uninstall-operator:
-#	helm uninstall --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) --namespace $(NAMESPACE)
-#
+install-operator:
+	helm install --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) oci://$(REPOSITORY_HOST)/$(HELM_CHART_NAME) --version 0.1.0 --namespace $(NAMESPACE) --create-namespace
+
+uninstall-operator:
+	helm uninstall --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) --namespace $(NAMESPACE)
+

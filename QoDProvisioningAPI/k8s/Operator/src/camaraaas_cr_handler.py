@@ -153,9 +153,7 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
                 raise
 
     
-    def _process_successful_deployment(
-        self, namespace: str, name: str, url: str
-        ) -> None:
+    def _process_successful_deployment(self, namespace, name, url):
 
         patch = {
             "spec": {

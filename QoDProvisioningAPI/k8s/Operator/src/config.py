@@ -5,7 +5,6 @@ import sys
 # export CR_GROUP="av.it.pt"
 # export CR_VERSION="apiextensions.k8s.io/v1"
 # export CR_PLURAL="networkslice-ues"
-# export SLICE_MANAGER_BASE_URL="http://10.255.28.141:8000"
 
 class Config():
     # Set up custom resources info
@@ -13,7 +12,6 @@ class Config():
     cr_version = os.getenv('CR_VERSION')
     cr_plural = os.getenv('CR_PLURAL')
     # Set up the slice manager
-    slice_manager_base_url = os.getenv("SLICE_MANAGER_BASE_URL")
     logger = None
     
     # Logging

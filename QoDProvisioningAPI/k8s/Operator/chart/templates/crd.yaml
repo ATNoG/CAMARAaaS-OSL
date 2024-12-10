@@ -1,0 +1,139 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: {{ .Values.customResource.plural }}.{{ .Values.customResource.group }}
+  labels:
+  {{- include "camaraaas-qod-provisioning-api-op-chart.labels" . | nindent 4 }}
+spec:
+  group: {{ quote .Values.customResource.group }}
+  names:
+    plural: {{ quote .Values.customResource.plural }}
+    singular: {{ quote .Values.customResource.singular }}
+    kind: {{ quote .Values.customResource.kind }}
+    shortNames: {{ toYaml .Values.customResource.shortNames | nindent 6 }}
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: NOT_RUNNING
+                  enum:
+                    - "RUNNING"
+                    - "NOT_RUNNING"
+                messageBroker:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                    # Todo: The username and password should come from a K8s Secret
+                    username:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                    - url
+                    - username
+                    - password
+
+                serviceUnderControl:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      format: uuid
+                  required:
+                    - uuid
+
+                camaraAPI:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      default: "NOT_RUNNING"
+                      enum:
+                        - "RUNNING"
+                        - "NOT_RUNNING"
+                    url:
+                      type: string
+                      default: Yet To Be Configured
+                    username:
+                      type: string
+                      default: Yet To Be Configured
+                    password:
+                      type: string
+                      default: Yet To Be Configured
+                    results:
+                      type: array
+                      default: []
+                      items:
+                        type: object
+                        properties:
+                          # Device
+                          device:
+                            type: object
+                            properties:
+                              ipv4Address:
+                                type: object
+                                properties:
+                                  publicAddress:
+                                    type: string
+                                  privateAddress:
+                                    type: string
+                                  privatePort:
+                                    type: integer
+                              ipv6Address:
+                                type: string
+                              phoneNumber:
+                                type: string
+                                pattern: '^\+[1-9][0-9]{4,14}$'
+                              networkAccessIdentifier:
+                                type: string
+                          # QoS Profile
+                          qosProfile:
+                            type: string
+                          # Sink
+                          sink:
+                            type: string
+                          # Sink Credential
+                          sinkCredential:
+                            type: object
+                            properties:
+                              credentialType:
+                                type: string
+                                enum:
+                                  - "PLAIN"
+                                  - "ACCESSTOKEN"
+                                  - "REFRESHTOKEN"
+                          # Provisioning ID
+                          provisioningId:
+                            type: string
+                            format: uuid
+                          # Started At
+                          startedAt:
+                            type: string
+                            format: date-time
+                          # Status
+                          status:
+                            type: string
+                            enum:
+                              - REQUESTED
+                              - AVAILABLE
+                              - UNAVAILABLE
+                          # Status Info 
+                          statusInfo:
+                            type: string
+                            enum:
+                              - NETWORK_TERMINATED
+                              - DELETE_REQUESTED
+              required:
+                - serviceUnderControl
+                - messageBroker

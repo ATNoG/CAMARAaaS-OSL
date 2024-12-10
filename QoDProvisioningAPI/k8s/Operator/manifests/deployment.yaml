@@ -16,7 +16,7 @@ spec:
       serviceAccountName: camaraaas-qod-provisioning-api-op
       containers:
         - name: camaraaas-qod-provisioning-api-op-container
-          image: atnog-harbor.av.it.pt/atnog/camaraaas-qod-provisioning-api-op
+          image: atnog-harbor.av.it.pt/camaraaas/camaraaas-qod-provisioning-api-op
           command: ["python", "k8s_operator.py"] 
           env:
             - name: LOG_LEVEL
@@ -28,5 +28,5 @@ spec:
             - name: CR_VERSION
               value: "v1"
             - name: CR_PLURAL
-              value: "networkslice-ues"
+              value: "camaraaas-qod-provisioning-apis"
       restartPolicy: Always

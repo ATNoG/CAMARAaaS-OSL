@@ -19,6 +19,10 @@ rules:
   - apiGroups: ["av.it.pt"]
     resources: ["camaraaas-qod-provisioning-apis"]
     verbs: ["get", "list", "watch", "patch", "create", "update", "delete"]
+
+  - apiGroups: [""]
+    resources: ["pods", "services", "nodes"]
+    verbs: ["get", "list", "watch", "patch", "create", "update", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
