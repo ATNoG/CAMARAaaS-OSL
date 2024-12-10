@@ -74,7 +74,7 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
             "spec": {
                 "containers": [{
                     "name": "app-container",
-                    "image": "nginx",  # Change to your desired image
+                    "image": "nginx",
                     "ports": [{"containerPort": 80}]
                 }]
             }
