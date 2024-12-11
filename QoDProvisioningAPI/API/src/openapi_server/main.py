@@ -16,11 +16,26 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+import logging
+import asyncio
+import json
 
 from fastapi import FastAPI
+from fastapi.logger import logger
+from sqlalchemy.orm import Session
 
 from openapi_server.apis.qo_d_provisioning_api import router as QoDProvisioningApiRouter
-from openapi_server.database.db import init_db
+from openapi_server.database.db import init_db, get_db
+from openapi_server.database import crud
+from openapi_server.aux.service_event_manager.service_event_manager import ServiceEventManager
+
+
+# Set Uvicorn log level
+uvicorn_access_logger = logging.getLogger("uvicorn.access")
+uvicorn_access_logger.setLevel(logging.INFO)
+
+# Set FastAPI logger level
+logger.setLevel(logging.INFO)
 
 app = FastAPI(
     title="QoD Provisioning API",
@@ -37,3 +52,40 @@ def startup_event():
     Initializes the database tables.
     """
     init_db()
+
+    ServiceEventManager.subscribe_to_events()
+
+    asyncio.create_task(fetch_camara_results_periodically())
+
+
+    
+
+async def fetch_camara_results_periodically():
+    """
+    Periodically fetch camaraResults for the given service
+    """
+
+    db_session = next(get_db())
+
+    while True:
+
+        # Fetch the results every 20 seconds
+        await asyncio.sleep(20)
+
+        # Access results safely
+        with ServiceEventManager.camara_results_lock:
+            results = ServiceEventManager.camara_results.get("camaraResults")
+
+        if results:
+            logger.info(f"Fetched camaraResults for the service: {results}\n")
+
+            parsed_results = json.loads(results)
+
+            for result in parsed_results:
+                logger.info(result.get("provisioningId"))
+
+                provisioning = crud.get_provisioning_by_id(db_session, "1")
+
+                logger.info(f"provisioning: {provisioning}")
+        else:
+            logger.info(f"No camaraResults available for the service yet.\n")
