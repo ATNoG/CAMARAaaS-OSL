@@ -1,0 +1,34 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ue-qod-profile-op
+  namespace: itav-slice-manager-client
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ue-qod-profile-op-cluster-role
+  namespace: itav-slice-manager-client
+rules:
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch", "patch", "create", "update"]
+    
+  # Permissions for the custom resources (CRs)
+  - apiGroups: ["av.it.pt"]
+    resources: ["ue-qod-profiles"]
+    verbs: ["get", "list", "watch", "patch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ue-qod-profile-op-cluster-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: ue-qod-profile-op
+    namespace: itav-slice-manager-client
+roleRef:
+  kind: ClusterRole
+  name: ue-qod-profile-op-cluster-role
+  apiGroup: rbac.authorization.k8s.io

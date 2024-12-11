@@ -1,0 +1,151 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ue-qod-profiles.av.it.pt
+spec:
+  group: av.it.pt
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: NOT_RUNNING
+                  enum:
+                    - "RUNNING"
+                    - "NOT_RUNNING"
+                ITAvSliceManager:
+                  type: object
+                  properties:
+                    defaultProfile:
+                      type: object
+                      properties:
+                        AMBRUP:
+                          type: integer
+                        AMBRDW:
+                          type: integer
+                    slice: 
+                      type: string
+                    profiles:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          AMBRUP:
+                            type: integer
+                          AMBRDW:
+                            type: integer
+                qodProv:
+                  type: object
+                  properties:
+                    operation:
+                      type: string
+                    provisioningId:
+                      type: string
+                    device:
+                      type: object
+                      properties:
+                        phoneNumber:
+                          type: string
+                          pattern: '^\+[1-9][0-9]{4,14}$'
+                        networkAccessIdentifier:
+                          type: string
+                        ipv4Address:
+                          type: object
+                          properties:
+                            publicAddress:
+                              type: string
+                            privateAddress:
+                              type: string
+                            privatePort:
+                              type: integer
+                        ipv6Address:
+                          type: string
+                    qosProfile:
+                      type: string
+                    sink:
+                      type: string
+                    sinkCredential:
+                      type: object
+                      properties:
+                        credentialType:
+                          type: string
+                          enum:
+                            - "PLAIN"
+                            - "ACCESSTOKEN"
+                            - "REFRESHTOKEN"
+                camaraLastRequest:
+                  type: string
+                camaraResults:
+                  type: array
+                  default: []
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: object
+                        properties:
+                          phoneNumber:
+                            type: string
+                            pattern: '^\+[1-9][0-9]{4,14}$'
+                          networkAccessIdentifier:
+                            type: string
+                          ipv4Address:
+                            type: object
+                            properties:
+                              publicAddress:
+                                type: string
+                              privateAddress:
+                                type: string
+                              privatePort:
+                                type: integer
+                          ipv6Address:
+                            type: string
+                      qosProfile:
+                        type: string
+                      sink:
+                        type: string
+                      sinkCredential:
+                        type: object
+                        properties:
+                          credentialType:
+                            type: string
+                            enum:
+                              - "PLAIN"
+                              - "ACCESSTOKEN"
+                              - "REFRESHTOKEN"
+                      provisioningId:
+                        type: string
+                        format: uuid
+                      startedAt:
+                        type: string
+                        format: date-time
+                      status:
+                        type: string
+                        enum:
+                          - REQUESTED
+                          - AVAILABLE
+                          - UNAVAILABLE
+                      statusInfo:
+                        type: string
+                        enum:
+                          - NETWORK_TERMINATED
+                          - DELETE_REQUESTED
+              required:
+                - ITAvSliceManager
+            status:
+              type: object
+  scope: Namespaced
+  names:
+    plural: ue-qod-profiles
+    singular: ue-qod-profile
+    kind: UEQoDProfile
+    shortNames:
+      - uep

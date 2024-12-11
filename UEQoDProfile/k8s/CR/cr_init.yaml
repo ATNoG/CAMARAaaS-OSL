@@ -1,0 +1,18 @@
+apiVersion: av.it.pt/v1
+kind: UEQoDProfile
+metadata:
+  name: ue-qod-profile-init
+  namespace: default
+spec:
+  ITAvSliceManager:
+    slice: my_slice
+    defaultProfile:
+      AMBRUP: 2000
+      AMBRDW: 2000
+    profiles:
+      QOS_A:
+        AMBRUP: 1000
+        AMBRDW: 500
+      QOS_B:
+        AMBRUP: 2000
+        AMBRDW: 1000

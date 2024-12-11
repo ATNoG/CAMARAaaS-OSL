@@ -1,0 +1,39 @@
+apiVersion: av.it.pt/v1
+kind: UEQoDProfile
+metadata:
+  name: ue-qod-profile
+  namespace: default
+spec:
+  qodProv:
+    newQoDPovToApply: %s
+    provisioningId: %s
+    device:
+      phoneNumber: %s
+      networkAccessIdentifier: %s
+      ipv4Address:
+        publicAddress: %s
+        privateAddress: %s
+        privatePort: %s
+      ipv6Address: %s
+    qosProfile: %s
+    sink: %s
+    sinkCredential: 
+      credentialType: %s
+  camaraLastRequest: %s
+  camaraResults:
+    - device:
+        ipv4Address:
+          publicAddress: %s
+          privateAddress: %s
+          privatePort: %s
+        ipv6Address: %s
+        phoneNumber: %s
+        networkAccessIdentifier: %s
+      qosProfile: %s
+      sink: %s
+      sinkCredential:
+        credentialType: %s
+      provisioningId: %s
+      startedAt: %s
+      status: %s
+      statusInfo: %s
