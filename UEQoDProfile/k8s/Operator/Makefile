@@ -13,7 +13,11 @@ REPOSITORY_HOST = atnog-harbor.av.it.pt/atnog
 KUBECONFIG ?= /etc/rancher/k3s/k3s.yaml 
 NAMESPACE = itav-slice-manager-client
 
-PATCH_CONTENT_INVALID='{"spec": {"qodProv": {"newQoDProvToApply": true, "provisioningId": "12345678-1234-1234-1234-123456789abc", "device": {"phoneNumber": "+987654321", "networkAccessIdentifier": "987654321@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.0", "privateAddress": "192.168.1.200", "privatePort": 6000}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_D"}}}'
+PATCH_CONTENT_INVALID='{"spec": {"qodProv": {"operation": "CREATE", "provisioningId": "12345678-1234-1234-1234-12345678901a", "device": {"phoneNumber": "+111111111", "networkAccessIdentifier": "111111111@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.1", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_D"}}}'
+PATCH_CONTENT_CREATE='{"spec": {"qodProv": {"operation": "CREATE", "provisioningId": "12345678-1234-1234-1234-12345678901b", "device": {"phoneNumber": "+111111112", "networkAccessIdentifier": "111111112@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.2", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_A"}}}'
+PATCH_CONTENT_UPDATE='{"spec": {"qodProv": {"operation": "UPDATE", "provisioningId": "12345678-1234-1234-1234-12345678901b", "device": {"phoneNumber": "+111111112", "networkAccessIdentifier": "111111112@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.2", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_B"}}}'
+PATCH_CONTENT_CREATE2='{"spec": {"qodProv": {"operation": "CREATE", "provisioningId": "12345678-1234-1234-1234-12345678901c", "device": {"phoneNumber": "+111111112", "networkAccessIdentifier": "111111112@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.2", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_A"}}}'
+PATCH_CONTENT_DELETE='{"spec": {"qodProv": {"operation": "DELETE", "provisioningId": "12345678-1234-1234-1234-12345678901b", "device": {"phoneNumber": "+111111112", "networkAccessIdentifier": "111111112@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.2", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_B"}}}'
 
 
 
@@ -45,7 +49,7 @@ terminate-local-testing-environment:
 	kubectl delete -f ../CR/crd.yaml && kubectl delete -f ./manifests/operator-namespace.yaml && kubectl delete -f ./manifests/operator-role.yaml
 
 run-local:
-	. src/venv/bin/activate && CR_GROUP="av.it.pt" CR_VERSION="v1" CR_PLURAL="ue-qod-profiles" SLICE_MANAGER_BASE_URL="http://10.255.28.64:8080" python3 src/k8s_operator.py
+	. src/venv/bin/activate && CR_GROUP="av.it.pt" CR_VERSION="v1" CR_PLURAL="ue-qod-profiles" SLICE_MANAGER_BASE_URL="http://10.255.28.64:8080" SLICE_MANAGER_USERNAME="admin" SLICE_MANAGER_PASSWORD="password" python3 src/k8s_operator.py
 
 
 # K8S Manifests
@@ -81,8 +85,28 @@ describe-cr:
 patch-cr-invalid: 
 	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_INVALID)
 
+patch-cr-create: 
+	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_CREATE)
+	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_CREATE2)
+
+patch-cr-update: 
+	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_UPDATE)
+
+patch-cr-delete: 
+	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_DELETE)
+
+
+
+
 recreate-cr: delete-cr create-cr
 recreate-crd: delete-crd create-crd
+
+sleep:
+	sleep 5
+
+test-cr-invalid: recreate-cr patch-cr-invalid describe-cr
+test-cr-create: recreate-cr patch-cr-create describe-cr
+test-cr-update: recreate-cr patch-cr-create describe-cr sleep patch-cr-update describe-cr
 
 # HELM
 #---helm-package:

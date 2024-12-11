@@ -53,7 +53,11 @@ if __name__ == '__main__':
     v1 = kubeconfig()
     custom_api = client.CustomObjectsApi()
     ue_qod_prfile_cr_handler = UEQoDProfileCRHandler(
-        ITAvNetworkSliceManager(Config.slice_manager_base_url),
+        ITAvNetworkSliceManager(
+            Config.slice_manager_base_url,
+            Config.slice_manager_username,
+            Config.slice_manager_password
+        ),
         custom_api
     )
     main()

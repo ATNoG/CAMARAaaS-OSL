@@ -24,6 +24,13 @@ spec:
                 ITAvSliceManager:
                   type: object
                   properties:
+                    defaultProfile:
+                      type: object
+                      properties:
+                        AMBRUP:
+                          type: integer
+                        AMBRDW:
+                          type: integer
                     slice: 
                       type: string
                     profiles:
@@ -38,9 +45,8 @@ spec:
                 qodProv:
                   type: object
                   properties:
-                    newQoDProvToApply:
-                      type: boolean
-                      default: False
+                    operation:
+                      type: string
                     provisioningId:
                       type: string
                     device:

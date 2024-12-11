@@ -6,6 +6,8 @@ import sys
 # export CR_VERSION="apiextensions.k8s.io/v1"
 # export CR_PLURAL="ue-qod-profiles"
 # export SLICE_MANAGER_BASE_URL="http://10.255.28.64:8080"
+# export SLICE_MANAGER_USERNAME="admin"
+# export SLICE_MANAGER_PASSWORD="password"
 
 class Config():
     # Set up custom resources info
@@ -14,6 +16,8 @@ class Config():
     cr_plural = os.getenv('CR_PLURAL')
     # Set up the slice manager
     slice_manager_base_url = os.getenv("SLICE_MANAGER_BASE_URL")
+    slice_manager_username = os.getenv("SLICE_MANAGER_USERNAME")
+    slice_manager_password = os.getenv("SLICE_MANAGER_PASSWORD")
     logger = None
     
     # Logging

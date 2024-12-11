@@ -6,6 +6,9 @@ metadata:
 spec:
   ITAvSliceManager:
     slice: my_slice
+    defaultProfile:
+      AMBRUP: 2000
+      AMBRDW: 2000
     profiles:
       QOS_A:
         AMBRUP: 1000
@@ -14,7 +17,7 @@ spec:
         AMBRUP: 2000
         AMBRDW: 1000
   qodProv:
-    newQoDProvToApply: true
+    operation: CREATE
     provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     device:
       phoneNumber: "+123456789"
