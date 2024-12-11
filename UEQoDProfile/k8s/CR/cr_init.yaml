@@ -16,3 +16,5 @@ spec:
       QOS_B:
         AMBRUP: 2000
         AMBRDW: 1000
+# OR
+#    profiles: {"QOS_A": {"AMBRUP": 1000, "AMBRDW": 500}, "QOS_B": {"AMBRUP": 2000, "AMBRDW": 1000}}
