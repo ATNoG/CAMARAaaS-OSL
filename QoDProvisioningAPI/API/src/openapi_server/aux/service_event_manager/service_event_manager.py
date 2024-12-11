@@ -23,6 +23,9 @@ EVENT_SERVICE_ATTRCHANGED = "EVENT.SERVICE.ATTRCHANGED"
 class ServiceEventManager:
     """Manages event subscriptions and service updates using STOMP."""
 
+    # Validate the environment variables before using them
+    Config.validate()
+
     broker_address = Config.broker_address
     broker_port = Config.broker_port
     broker_username = Config.broker_username
