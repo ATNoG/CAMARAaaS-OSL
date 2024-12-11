@@ -9,10 +9,15 @@ services:
     build:
       context: .
     ports:
-      - "8080:8080"
-    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8080
+      - "8000:8000"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8000 --log-level info
     environment:
       - SQLITE_DB_PATH=/data/sqlite.db  # Environment variable to define SQLite DB path
+      - BROKER_ADDRESS=10.255.28.137
+      - BROKER_PORT=61613
+      - BROKER_USERNAME=artemis
+      - BROKER_PASSWORD=artemis
+      - SERVICE_UUID=b68492ba-a0b1-46de-beb5-edb3b592f8ba
     volumes:
       - sqlite_data:/data  # Volume to persist SQLite database
 

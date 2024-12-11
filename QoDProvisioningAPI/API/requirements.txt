@@ -36,3 +36,4 @@ watchgod==0.7
 websockets==10.0
 pysqlite3==0.5.4
 sqlalchemy==1.4.46
+stomp.py==8.2.0
