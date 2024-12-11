@@ -1,0 +1,19 @@
+kubernetesClusterDomain: cluster.local
+deployment:
+  image:
+    repository: atnog-harbor.av.it.pt/camaraaas/ue-qod-profile-op
+    tag: latest
+  replicas: 1
+customResource:
+  group: av.it.pt
+  singular: ue-qod-profile
+  plural: ue-qod-profiles
+  kind: UEQoDProfile
+  shortNames:
+    - uep
+  version: v1
+logLevel: INFO
+sliceManager:
+  baseUrl: http://10.255.28.64:8080
+  username: admin
+  password: password

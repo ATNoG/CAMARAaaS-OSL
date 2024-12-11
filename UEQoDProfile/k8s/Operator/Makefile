@@ -1,14 +1,14 @@
 # Variables
-LOCAL_IMAGE_NAME = ns-ue-operator
+LOCAL_IMAGE_NAME = ue-qod-operator
 LOCAL_TAG = latest
 
-DOCKER_REPOSITORY_IMAGE_NAME = nslice-ue-op
+DOCKER_REPOSITORY_IMAGE_NAME = ue-qod-profile-op
 DOCKER_REPOSITORY_TAG = latest
-HELM_CHART_NAME = nslice-ue-op-chart
-REPOSITORY_HOST = atnog-harbor.av.it.pt/atnog
+HELM_CHART_DIR = chart
+REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 
-HELM_CHART_NAME = nslice-ue-op-chart
-REPOSITORY_HOST = atnog-harbor.av.it.pt/atnog
+HELM_CHART_NAME = ue-qod-profile-op-chart
+REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 
 KUBECONFIG ?= /etc/rancher/k3s/k3s.yaml 
 NAMESPACE = itav-slice-manager-client
@@ -19,26 +19,24 @@ PATCH_CONTENT_UPDATE='{"spec": {"qodProv": {"operation": "UPDATE", "provisioning
 PATCH_CONTENT_CREATE2='{"spec": {"qodProv": {"operation": "CREATE", "provisioningId": "12345678-1234-1234-1234-12345678901c", "device": {"phoneNumber": "+111111112", "networkAccessIdentifier": "111111112@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.2", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_A"}}}'
 PATCH_CONTENT_DELETE='{"spec": {"qodProv": {"operation": "DELETE", "provisioningId": "12345678-1234-1234-1234-12345678901b", "device": {"phoneNumber": "+111111112", "networkAccessIdentifier": "111111112@newdomain.com", "ipv4Address": {"publicAddress": "198.51.100.2", "privateAddress": "192.168.1.1", "privatePort": 1}, "ipv6Address": "2001:db8::1"}, "qosProfile": "QOS_B"}}}'
 
-
-
 # DOCKER
 
-#---docker-build:
-#---	docker build -t $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) .
-#---
-#---docker-tag:
-#---	docker tag $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
-#---
-#---docker-push:
-#---	docker push $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
-#---
-#---docker-clean:
-#---	docker image prune -f
-#---
-#---docker-remove:
-#---	docker rmi $(LOCAL_IMAGE_NAME):$(LOCAL_TAG)
-#---
-#---docker: docker-build docker-tag docker-push
+docker-build:
+	docker build -t $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) .
+
+docker-tag:
+	docker tag $(LOCAL_IMAGE_NAME):$(LOCAL_TAG) $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
+
+docker-push:
+	docker push $(REPOSITORY_HOST)/$(DOCKER_REPOSITORY_IMAGE_NAME):$(DOCKER_REPOSITORY_TAG)
+
+docker-clean:
+	docker image prune -f
+
+docker-remove:
+	docker rmi $(LOCAL_IMAGE_NAME):$(LOCAL_TAG)
+
+docker: docker-build docker-tag docker-push
 
 
 # Local Testing
@@ -53,17 +51,17 @@ run-local:
 
 
 # K8S Manifests
-#---create-operator:
-#---	kubectl apply -f ./cr/crd.yaml && kubectl apply -f ./k8s/operator-namespace.yaml && kubectl apply -f ./k8s/
-#---
-#---get-operator-pods:
-#---	kubectl get pods -n $(NAMESPACE) -l app=nslice-ue-op -o jsonpath="{.items[0].metadata.name}" 
-#---
-#---get-operator-logs:
-#---	kubectl logs -f $$(kubectl get pods -n $(NAMESPACE)  -l app=nslice-ue-op -o jsonpath="{.items[0].metadata.name}") -n $(NAMESPACE) 
-#---
-#---delete-operator:
-#---	kubectl delete -f ./k8s || true
+create-operator:
+	kubectl apply -f ../CR/crd.yaml && kubectl apply -f ./manifests/operator-namespace.yaml && kubectl apply -f ./manifests/
+
+get-operator-pods:
+	kubectl get pods -n $(NAMESPACE) -l app=ue-qod-profile-op -o jsonpath="{.items[0].metadata.name}" 
+
+get-operator-logs:
+	kubectl logs -f $$(kubectl get pods -n $(NAMESPACE)  -l app=ue-qod-profile-op -o jsonpath="{.items[0].metadata.name}") -n $(NAMESPACE) 
+
+delete-operator:
+	kubectl delete -f ./k8s || true
 
 
 # K8S Custom Resource
@@ -95,32 +93,28 @@ patch-cr-update:
 patch-cr-delete: 
 	kubectl patch ue-qod-profiles ue-qod-profile-init --namespace=default --type=merge -p $(PATCH_CONTENT_DELETE)
 
-
-
-
-recreate-cr: delete-cr create-cr
-recreate-crd: delete-crd create-crd
-
 sleep:
 	sleep 5
 
+recreate-cr: delete-cr create-cr
+recreate-crd: delete-crd create-crd
 test-cr-invalid: recreate-cr patch-cr-invalid describe-cr
 test-cr-create: recreate-cr patch-cr-create describe-cr
 test-cr-update: recreate-cr patch-cr-create describe-cr sleep patch-cr-update describe-cr
 
 # HELM
-#---helm-package:
-#---	helm package $(HELM_CHART_NAME)
-#---
-#---helm-push:
-#---	helm push $(HELM_CHART_NAME)-0.1.0.tgz  oci://$(REPOSITORY_HOST)
-#---
-#---helm: helm-package helm-push
+helm-package:
+	helm package $(HELM_CHART_DIR)
+
+helm-push:
+	helm push $(HELM_CHART_NAME)-0.1.0.tgz  oci://$(REPOSITORY_HOST)
+
+helm: helm-package helm-push
 
 
 # Deploy Operator
-#---install-operator:
-#---	helm install --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) oci://$(REPOSITORY_HOST)/$(HELM_CHART_NAME) --version 0.1.0 --set sliceManagerBaseUrl=http://10.255.28.141:8000 --namespace $(NAMESPACE) --create-namespace
-#---
-#---uninstall-operator:
-#---	helm uninstall --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) --namespace $(NAMESPACE)
+install-operator:
+	helm install --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) oci://$(REPOSITORY_HOST)/$(HELM_CHART_NAME) --version 0.1.0 --set sliceManager.baseUrl=http://10.255.28.64:8080 --set sliceManager.username=admin --set sliceManager.password=password --namespace $(NAMESPACE) --create-namespace
+
+uninstall-operator:
+	helm uninstall --kubeconfig=$(KUBECONFIG) $(HELM_CHART_NAME) --namespace $(NAMESPACE)
