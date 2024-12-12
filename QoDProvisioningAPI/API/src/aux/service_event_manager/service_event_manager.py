@@ -2,19 +2,13 @@ import stomp
 import json
 import threading
 import time
-import logging
-from fastapi.logger import logger 
 import os
 import threading
 
-from .config import Config
+from aux.config import Config
 
-# Set Uvicorn log level
-uvicorn_access_logger = logging.getLogger("uvicorn.access")
-uvicorn_access_logger.setLevel(logging.INFO)
-
-# Set FastAPI logger level
-logger.setLevel(logging.INFO)
+# Set up logging
+logger = Config.setup_logging()
 
 # Constants for STOMP service configuration
 CATALOG_UPD_SERVICE = "CATALOG.UPD.SERVICE"
@@ -41,12 +35,22 @@ class ServiceEventManager:
         """Subscribe to the events topic."""
 
         def run_listener():
-            conn = stomp.Connection([(cls.broker_address, cls.broker_port)], heartbeats=(15000, 15000))
+            conn = stomp.Connection(
+                [(cls.broker_address, cls.broker_port)], 
+                heartbeats=(15000, 15000)
+            )
             conn.set_listener('', cls.MyListener())
-            conn.connect(cls.broker_username, cls.broker_password, wait=True)
+            conn.connect(
+                cls.broker_username, 
+                cls.broker_password, 
+                wait=True
+            )
             conn.subscribe(destination=EVENT_SERVICE_ATTRCHANGED, id=1)
 
-            logger.info(f"Subscribed to {EVENT_SERVICE_ATTRCHANGED}. Waiting for messages...")
+            logger.info(
+                f"Subscribed to {EVENT_SERVICE_ATTRCHANGED}. " 
+                f"Waiting for messages..."
+            )
             try:
                 while True:
                     time.sleep(1)
@@ -69,10 +73,18 @@ class ServiceEventManager:
 
             # Connect to STOMP broker and send the message
             conn = stomp.Connection([(cls.broker_address, cls.broker_port)])
-            conn.connect(cls.broker_username, cls.broker_password, wait=True)
+            conn.connect(
+                cls.broker_username, 
+                cls.broker_password, 
+                wait=True
+            )
 
             logger.info(f"Sending update to {CATALOG_UPD_SERVICE}...")
-            conn.send(destination=CATALOG_UPD_SERVICE, body=json.dumps(update_payload), headers=headers)
+            conn.send(
+                destination=CATALOG_UPD_SERVICE, 
+                body=json.dumps(update_payload), 
+                headers=headers
+            )
             logger.info("Update sent successfully.")
             
             conn.disconnect()
@@ -101,8 +113,11 @@ class ServiceEventManager:
 
                             with ServiceEventManager.camara_results_lock:
                                 ServiceEventManager.camara_results["camaraResults"] = characteristic_value
-                            logger.info(f"New camaraResults stored for UUID {service_info.get('uuid')}: {characteristic_value}\n")
 
+                            logger.info(
+                                f"New camaraResults stored for UUID {service_info.get('uuid')}: "
+                                f"{characteristic_value}\\n"
+                            )
 
             except json.JSONDecodeError:
                 print('Received message is not valid JSON.')
