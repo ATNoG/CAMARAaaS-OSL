@@ -84,60 +84,8 @@ spec:
                 camaraLastRequest:
                   type: string
                 camaraResults:
-                  type: array
-                  default: []
-                  items:
-                    type: object
-                    properties:
-                      device:
-                        type: object
-                        properties:
-                          phoneNumber:
-                            type: string
-                            pattern: '^\+[1-9][0-9]{4,14}$'
-                          networkAccessIdentifier:
-                            type: string
-                          ipv4Address:
-                            type: object
-                            properties:
-                              publicAddress:
-                                type: string
-                              privateAddress:
-                                type: string
-                              privatePort:
-                                type: integer
-                          ipv6Address:
-                            type: string
-                      qosProfile:
-                        type: string
-                      sink:
-                        type: string
-                      sinkCredential:
-                        type: object
-                        properties:
-                          credentialType:
-                            type: string
-                            enum:
-                              - "PLAIN"
-                              - "ACCESSTOKEN"
-                              - "REFRESHTOKEN"
-                      provisioningId:
-                        type: string
-                        format: uuid
-                      startedAt:
-                        type: string
-                        format: date-time
-                      status:
-                        type: string
-                        enum:
-                          - REQUESTED
-                          - AVAILABLE
-                          - UNAVAILABLE
-                      statusInfo:
-                        type: string
-                        enum:
-                          - NETWORK_TERMINATED
-                          - DELETE_REQUESTED
+                  type: string
+                  default: "[]"
               required:
                 - ITAvSliceManager
             status:

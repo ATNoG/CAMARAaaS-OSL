@@ -40,11 +40,25 @@ def kubeconfig() -> client.CoreV1Api:
 
 @kopf.on.create(Config.cr_group, Config.cr_version, Config.cr_plural)
 def on_create_ue_qod_profle(spec, meta, logger, **kwargs):
-    ue_qod_prfile_cr_handler.process_ue_qod_profle_event("ADD", spec, meta)
+    logger.info(f"CREATED CR - {meta.get('uid')}")
+    ue_qod_prfile_cr_handler.process_ue_qod_profle_event("CREATE", spec, meta)
 
 @kopf.on.update(Config.cr_group, Config.cr_version, Config.cr_plural)
 def on_update_ue_qod_profle(spec, old, new, diff, meta, logger, **kwargs):
+    logger.info(f"UPDATED CR - {meta.get('uid')}")
     ue_qod_prfile_cr_handler.process_ue_qod_profle_event("UPDATE", spec, meta)
+    
+@kopf.on.delete(Config.cr_group, Config.cr_version, Config.cr_plural)
+def on_delete_ue_qod_profle(meta, spec, logger, **kwargs):
+    ue_qod_prfile_cr_handler.process_ue_qod_profle_event("DELETE", spec, meta)
+
+    
+@kopf.on.event(Config.cr_group, Config.cr_version, Config.cr_plural)
+def log_all_events(event, **kwargs):
+    """Logs all events for the given resources."""
+    event_type = event.get('type')
+    body = event.get('object')
+    logger.info(f"EVENT={event_type}, BODY={body}")
 
 def main():
     kopf.run()

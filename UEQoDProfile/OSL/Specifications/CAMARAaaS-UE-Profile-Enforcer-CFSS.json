@@ -1,6 +1,6 @@
 {
-    "name": "CAMARAaaS - UE Profile Enforcer (CFS)",
-    "description": "CAMARAaaS - UE Profile Enforcer (CFS)",
+    "name": "UE QoD Profile Enforcer (CFS)",
+    "description": "UE QoD Profile Enforcer (CFS)",
     "lifecycleStatus": "In design",
     "version": "0.1.0",
     "validFor": {
@@ -10,8 +10,8 @@
     "isBundle": null,
     "serviceSpecCharacteristic": [
         {
-            "name": "qodProv.qosProfile",
-            "configurable": null,
+            "name": "ITAvSliceManager.slice",
+            "configurable": true,
             "description": null,
             "extensible": null,
             "maxCardinality": 1,
@@ -26,8 +26,88 @@
             }
         },
         {
-            "name": "qodProv.device.ipv4Address.privateAddress",
-            "configurable": null,
+            "name": "ITAvSliceManager.defaultProfile.AMBRUP",
+            "configurable": true,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "INTEGER",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "ITAvSliceManager.defaultProfile.AMBRDW",
+            "configurable": true,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "INTEGER",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "ITAvSliceManager.profiles",
+            "configurable": true,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.operation",
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.provisioningId",
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.qosProfile",
+            "configurable": false,
             "description": null,
             "extensible": null,
             "maxCardinality": 1,
@@ -43,87 +123,7 @@
         },
         {
             "name": "qodProv.device.phoneNumber",
-            "configurable": null,
-            "description": null,
-            "extensible": null,
-            "maxCardinality": 1,
-            "minCardinality": 0,
-            "regex": null,
-            "valueType": "TEXT",
-            "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [],
-            "validFor": {
-                "endDateTime": "2043-12-31T23:59:59.999Z",
-                "startDateTime": "2024-01-01T00:00:00.001Z"
-            }
-        },
-        {
-            "name": "qodProv.sink",
-            "configurable": null,
-            "description": null,
-            "extensible": null,
-            "maxCardinality": 1,
-            "minCardinality": 0,
-            "regex": null,
-            "valueType": "TEXT",
-            "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [],
-            "validFor": {
-                "endDateTime": "2043-12-31T23:59:59.999Z",
-                "startDateTime": "2024-01-01T00:00:00.001Z"
-            }
-        },
-        {
-            "name": "camaraResults",
-            "configurable": null,
-            "description": null,
-            "extensible": null,
-            "maxCardinality": 1,
-            "minCardinality": 0,
-            "regex": null,
-            "valueType": "TEXT",
-            "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [],
-            "validFor": {
-                "endDateTime": "2043-12-31T23:59:59.999Z",
-                "startDateTime": "2024-01-01T00:00:00.001Z"
-            }
-        },
-        {
-            "name": "qodProv.device.ipv4Address.privatePort",
-            "configurable": null,
-            "description": null,
-            "extensible": null,
-            "maxCardinality": 1,
-            "minCardinality": 0,
-            "regex": null,
-            "valueType": "INTEGER",
-            "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [],
-            "validFor": {
-                "endDateTime": "2043-12-31T23:59:59.999Z",
-                "startDateTime": "2024-01-01T00:00:00.001Z"
-            }
-        },
-        {
-            "name": "qodProv.device.ipv4Address.publicAddress",
-            "configurable": null,
-            "description": null,
-            "extensible": null,
-            "maxCardinality": 1,
-            "minCardinality": 0,
-            "regex": null,
-            "valueType": null,
-            "serviceSpecCharRelationship": [],
-            "serviceSpecCharacteristicValue": [],
-            "validFor": {
-                "endDateTime": "2043-12-31T23:59:59.999Z",
-                "startDateTime": "2024-01-01T00:00:00.001Z"
-            }
-        },
-        {
-            "name": "qodProv.sinkCredential.credentialType",
-            "configurable": null,
+            "configurable": false,
             "description": null,
             "extensible": null,
             "maxCardinality": 1,
@@ -139,7 +139,7 @@
         },
         {
             "name": "qodProv.device.networkAccessIdentifier",
-            "configurable": null,
+            "configurable": false,
             "description": null,
             "extensible": null,
             "maxCardinality": 1,
@@ -154,14 +154,46 @@
             }
         },
         {
-            "name": "camaraLastRequest",
-            "configurable": null,
+            "name": "qodProv.device.ipv4Address.publicAddress",
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": null,
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.device.ipv4Address.privateAddress",
+            "configurable": false,
             "description": null,
             "extensible": null,
             "maxCardinality": 1,
             "minCardinality": 0,
             "regex": null,
             "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.device.ipv4Address.privatePort",
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "INTEGER",
             "serviceSpecCharRelationship": [],
             "serviceSpecCharacteristicValue": [],
             "validFor": {
@@ -171,7 +203,23 @@
         },
         {
             "name": "qodProv.device.ipv6Address",
-            "configurable": null,
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "camaraResults",
+            "configurable": false,
             "description": null,
             "extensible": null,
             "maxCardinality": 1,

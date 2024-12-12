@@ -17,7 +17,7 @@ spec:
         AMBRUP: 2000
         AMBRDW: 1000
   qodProv:
-    operation: CREATE
+    operation: UPDATE
     provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
     device:
       phoneNumber: "+123456789"
@@ -27,7 +27,7 @@ spec:
         privateAddress: "192.168.1.100"
         privatePort: 5000
       ipv6Address: "2001:db8::ff00:42:8329"
-    qosProfile: "QOS_C"
+    qosProfile: "QOS_A"
     sink: "https://endpoint.example.com/sink"
     sinkCredential: 
       credentialType: "PLAIN"
