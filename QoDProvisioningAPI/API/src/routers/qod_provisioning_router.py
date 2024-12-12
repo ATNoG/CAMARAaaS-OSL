@@ -9,8 +9,6 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
-from apis.qo_d_provisioning_api_base import BaseQoDProvisioningApi
-
 from fastapi import (  # noqa: F401
     APIRouter,
     Body,
@@ -123,6 +121,8 @@ async def create_provisioning(
                         # Todo: Create Sink Info on target Svc Characteristics
                         {"name": "qodProv.operation",
                          "value": {"value": "CREATE"}
+                         # VALOR ESTATICO  para create
+                         # VALOR PARA DELETE = DELETE
                         },
                         {"name": "qodProv.provisioningId",
                          "value": {"value": new_provisioning.id}
@@ -151,11 +151,6 @@ async def create_provisioning(
         # If an error occurs, roll back and raise an HTTPException
         raise HTTPException(status_code=500, detail=str(e))
         
-    #if not BaseQoDProvisioningApi.subclasses:
-    #    raise HTTPException(status_code=500, detail="Not implemented")
-    
-    #return await BaseQoDProvisioningApi.subclasses[0]().create_provisioning(create_provisioning, x_correlator, db_session)
-
 
 @router.delete(
     "/device-qos/{provisioningId}",
@@ -177,16 +172,23 @@ async def create_provisioning(
 async def delete_provisioning(
     provisioningId: Annotated[StrictStr, Field(description="Provisioning ID that was obtained from the createProvision operation")] = Path(..., description="Provisioning ID that was obtained from the createProvision operation"),
     x_correlator: Annotated[Optional[StrictStr], Field(description="Correlation id for the different services")] = Header(None, description="Correlation id for the different services"),
-    db_session: Session = Depends(get_db)
-    #token_openId: TokenModel = Security(
-    #    get_token_openId
-    #),
+    db_session: Session = Depends(get_db),
 ) -> ProvisioningInfo:
     """Release resources related to QoS provisioning.  If the notification callback is provided and the provisioning status was &#x60;AVAILABLE&#x60;, when the deletion is completed, the client will receive in addition to the response a &#x60;PROVISIONING_STATUS_CHANGED&#x60; event with - &#x60;status&#x60; as &#x60;UNAVAILABLE&#x60; and - &#x60;statusInfo&#x60; as &#x60;DELETE_REQUESTED&#x60; There will be no notification event if the &#x60;status&#x60; was already &#x60;UNAVAILABLE&#x60;.  **NOTES:** - The access token may be either 2-legged or 3-legged. - If a 3-legged access token is used, the end user (and device) associated with the QoD provisioning must also be associated with the access token. - The QoD provisioning must have been created by the same API client given in the access token. """
-    if not BaseQoDProvisioningApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
+    try:
+        # Call the CRUD function to create the provisioning in the database
+        deleted_provisioning = crud.delete_provisioning(db_session, provisioningId)
 
-    return await BaseQoDProvisioningApi.subclasses[0]().delete_provisioning(provisioningId, x_correlator, db_session)
+        return deleted_provisioning
+    
+    except HTTPException:
+        # Allow 404 and other HTTPExceptions to propagate without modification
+        raise
+
+    except Exception as e:
+        # If an error occurs, roll back and raise an HTTPException
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @router.get(
@@ -213,11 +215,19 @@ async def get_provisioning_by_id(
     #    get_token_openId
     #),
 ) -> ProvisioningInfo:
-    """Querying for QoD provisioning resource information details  **NOTES:** - The access token may be either 2-legged or 3-legged. - If a 3-legged access token is used, the end user (and device) associated with the QoD provisioning must also be associated with the access token. - The QoD provisioning must have been created by the same API client given in the access token. """
-    if not BaseQoDProvisioningApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
+    try:
+        # Call the CRUD function to create the provisioning in the database
+        provisioning = crud.get_provisioning_by_id(db_session, provisioningId)
 
-    return await BaseQoDProvisioningApi.subclasses[0]().get_provisioning_by_id(provisioningId, x_correlator, db_session)
+        return provisioning
+    
+    except HTTPException:
+        # Allow 404 and other HTTPExceptions to propagate without modification
+        raise
+    
+    except Exception as e:
+        # If an error occurs, roll back and raise an HTTPException
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post(
@@ -246,7 +256,16 @@ async def retrieve_provisioning_by_device(
     #),
 ) -> ProvisioningInfo:
     """Retrieves the QoD provisioning for a device.  **NOTES:** - The access token may be either 2-legged or 3-legged.   - If a 3-legged access token is used, the end user (and device) associated with the QoD provisioning must also be associated with the access token. In this case it is recommended NOT to include the &#x60;device&#x60; parameter in the request (see \&quot;Handling of device information\&quot; within the API description for details).   - If a 2-legged access token is used, the device parameter must be provided and identify a device. - The QoD provisioning must have been created by the same API client given in the access token. - If no provisioning is found for the device, an error response 404 is returned with code \&quot;NOT_FOUND\&quot;. """
-    if not BaseQoDProvisioningApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-        
-    return await BaseQoDProvisioningApi.subclasses[0]().retrieve_provisioning_by_device(retrieve_provisioning_by_device, x_correlator, db_session)
+    try:
+        # Call the CRUD function to create the provisioning in the database
+        provisioning = crud.get_provisioning_by_device(db_session, retrieve_provisioning_by_device)
+
+        return provisioning
+
+    except HTTPException:
+        # Allow 404 and other HTTPExceptions to propagate without modification
+        raise
+
+    except Exception as e:
+        # If an error occurs, roll back and raise an HTTPException
+        raise HTTPException(status_code=500, detail=str(e))
