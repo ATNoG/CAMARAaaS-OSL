@@ -9,12 +9,10 @@ spec:
     defaultProfile:
       AMBRUP: 2000
       AMBRDW: 2000
-    profiles:
-      QOS_A:
-        AMBRUP: 1000
-        AMBRDW: 500
-      QOS_B:
-        AMBRUP: 2000
-        AMBRDW: 1000
-# OR
-#    profiles: {"QOS_A": {"AMBRUP": 1000, "AMBRDW": 500}, "QOS_B": {"AMBRUP": 2000, "AMBRDW": 1000}}
+    profiles: {"QOS_A": {"AMBRUP": 1000, "AMBRDW": 500}, "QOS_B": {"AMBRUP": 2000, "AMBRDW": 1000}}
+    #  QOS_A:
+    #    AMBRUP: 1000
+    #    AMBRDW: 500
+    #  QOS_B:
+    #    AMBRUP: 2000
+    #    AMBRDW: 1000

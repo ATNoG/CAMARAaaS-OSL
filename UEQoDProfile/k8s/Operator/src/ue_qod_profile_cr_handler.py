@@ -20,6 +20,7 @@ class UEQoDProfileCRHandler:
     ):
         self.slice_manager = slice_manager
         self.custom_objects_api = custom_objects_api
+        self.results_cache = {}
         
     def process_ue_qod_profle_event(
         self, event: str, spec: dict, metadata: dict
@@ -28,7 +29,20 @@ class UEQoDProfileCRHandler:
         cr_name = metadata['name']
         cr_namespace = metadata['namespace']
 
-        if event == "ADD":
+        if event == "DELETE":
+            logger.info(
+                f"A resource with group: {Config.cr_group}, "
+                f"version: {Config.cr_version}, plural: {Config.cr_plural} "
+                f"was DELETED. This resource was named '{cr_name}' and was "
+                f"deployed in namespace '{cr_namespace}'."
+            )
+            del self.results_cache[f"{cr_namespace}/{cr_name}"]
+            logger.info(
+                f"Updated Results Cache After Deletion: {self.results_cache}"
+            )
+            return
+            
+        elif event == "CREATE":
             logger.info(
                 f"A resource with group: {Config.cr_group}, "
                 f"version: {Config.cr_version}, plural: {Config.cr_plural} "
@@ -38,9 +52,7 @@ class UEQoDProfileCRHandler:
                 f"ITAvNetworkSliceManager (url={self.slice_manager.base_url})"
                 f"Resource: {spec}"
             )
-            
             self._process_init(cr_namespace, cr_name)
-            return
             
         elif event == "UPDATE":
             logger.info(
@@ -49,42 +61,22 @@ class UEQoDProfileCRHandler:
                 f"was UPDATED. This resource is named '{cr_name}' and was "
                 f"deployed in namespace '{cr_namespace}'. "
                 f"Resource: {spec}"
+            )    
+        
+        # If there is not a new profile to apply, stop
+        if "qodProv" not in spec \
+        or spec["qodProv"].get("operation") \
+        not in ["CREATE", "UPDATE", "DELETE"]:
+            logger.info(
+                "It is not required to provision a new QoD profile."
             )
-            # If there is not a new profile to apply, stop
-            if "qodProv" not in spec \
-            or spec["qodProv"].get("operation") \
-            not in ["CREATE", "UPDATE", "DELETE"]:
-                logger.info(
-                    "It is not required to provision a new QoD profile."
-                )
-                return
-            
-            tmp_result = self._spec_qod_prov_to_tmp_result(spec)
-            
-            self._process_qod_provisioning_request(
-                cr_namespace, cr_name, spec, tmp_result
-            )
+            return
         
+        tmp_result = self._spec_qod_prov_to_tmp_result(spec)
         
-        
-        
-        
-        
-                
-            
-        
-        
-
-        # Make request to the Slice Manager
-        #should_apply_cr, enforcement_result = self.slice_manager \
-        #    .create_network_slice_ue(
-        #        spec, self._spec_params_to_ue_patch_payload(spec)
-        #    )
-        #
-        #if should_apply_cr:
-        #    self.process_network_slice_ue_enforcement(
-        #        cr_namespace, cr_name, enforcement_result
-        #    )
+        self._process_qod_provisioning_request(
+            cr_namespace, cr_name, spec, tmp_result
+        )
     
     def _process_qod_provisioning_request (
         self, cr_namespace, cr_name, spec, tmp_result
@@ -209,7 +201,13 @@ class UEQoDProfileCRHandler:
     def _process_results_update(self, namespace, name, spec, result, operation):
         
         # Get Current Results
-        current_results = spec["camaraResults"]
+        current_results = []
+        try:
+            current_results = json.loads(
+                self.results_cache[f"{namespace}/{name}"]
+            )
+        except Exception as exc:
+            logger.info(f"Could not load camaraResults JSON. Reason {exc}")
 
         if operation == "CREATE":
             current_results.append(result)
@@ -228,15 +226,18 @@ class UEQoDProfileCRHandler:
                 in current_results
                 if r["provisioningId"] != result["provisioningId"]
             ]
-            
-            print("HERE!")
+    
+        logger.info(f"CAMARA Results: {current_results}")
+        # Save results in cache
+        self.results_cache[f"{namespace}/{name}"] = json.dumps(current_results)
+        logger.info(f"Updated Results Cache: {self.results_cache}")
         
         patch = {
             "spec": {
                 "qodProv": {
                     "operation": f"{operation}-ALREADY-APPLIED"
                 },
-                "camaraResults": current_results
+                "camaraResults": json.dumps(current_results)
             }
         }
     
@@ -257,36 +258,5 @@ class UEQoDProfileCRHandler:
         except client.exceptions.ApiException as e:
             logger.error(
                 "Exception when updating 'spec.camaraResults' "
-                f"in custom resource: {e}")
-            
-    
-    def process_network_slice_ue_enforcement(
-        self, namespace: str, name: str, enforcement_result: dict
-        ) -> None:
-
-        patch = {
-            "spec": {
-                "network-slice-ue-enforcement": enforcement_result
-            }
-        }
-    
-        try:
-            # Apply the patch to update 'spec.data2' of the custom resource
-            self.custom_objects_api.patch_namespaced_custom_object(
-                group=Config.cr_group,
-                version=Config.cr_version,
-                namespace=namespace,
-                plural=Config.cr_plural,
-                name=name,
-                body=patch
-            )
-            logger.info(
-                f"Updated 'spec.network-slice-ue-enforcement' for {name} in "
-                f"{namespace} to {enforcement_result}")
-
-        except client.exceptions.ApiException as e:
-            logger.error(
-                "Exception when updating 'spec.network-slice-ue-enforcement' "
-                f"in custom resource: {e}")
-    
+                f"in custom resource: {e}")    
 
