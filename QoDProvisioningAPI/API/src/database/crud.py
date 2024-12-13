@@ -158,7 +158,22 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
         logger.debug(f"Received retrieve provisioning by device data: {retrieve_provisioning_by_device}\n")
 
         # Check if the device exists
-        existing_device = db.query(Device).filter_by(phone_number=retrieve_provisioning_by_device.device.phone_number).first()
+        if device_data.get("phoneNumber"):
+            existing_device = db.query(Device).filter_by(
+                phone_number=device_data["phoneNumber"]
+            ).first()
+        elif device_data.get("ipv4Address"):
+            existing_device = db.query(Device).filter_by(
+                ipv4_address=device_data["ipv4Address"]
+            ).first()
+        elif device_data.get("ipv6Address"):
+            existing_device = db.query(Device).filter_by(
+                ipv6_address=device_data["ipv6Address"]
+            ).first()
+        elif device_data.get("networkAccessIdentifier"):
+            existing_device = db.query(Device).filter_by(
+                network_access_identifier=device_data["networkAccessIdentifier"]
+            ).first()
 
         if existing_device:
             provisioning = db.query(Provisioning).filter_by(device_id=existing_device.id).first()
