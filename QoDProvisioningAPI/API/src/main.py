@@ -25,8 +25,8 @@ from sqlalchemy.orm import Session
 
 from routers.qod_provisioning_router import router as QoDProvisioningApiRouter
 from database.db import init_db, get_db
-from database import crud
 from aux.service_event_manager.service_event_manager import ServiceEventManager
+from aux.camara_results_processor.camara_results_processor import CamaraResultsProcessor
 from aux.config import Config
 
 # Set up logging
@@ -41,41 +41,17 @@ app = FastAPI(
 app.include_router(QoDProvisioningApiRouter)
 
 @app.on_event("startup")
-def startup_event():
+async def startup_event():
     """
     Event triggered when the application starts.
     Initializes the database tables.
     """
     init_db()
 
+    ServiceEventManager.initialize()
+
     ServiceEventManager.subscribe_to_events()
 
-    asyncio.create_task(fetch_camara_results_periodically())
-    
-
-async def fetch_camara_results_periodically():
-    """
-    Periodically fetch camaraResults for the given service
-    """
-
-    db_session = next(get_db())
-
-    while True:
-        # Fetch the results every 20 seconds
-        await asyncio.sleep(20)
-
-        # Access results safely
-        with ServiceEventManager.camara_results_lock:
-            results = ServiceEventManager.camara_results.get("camaraResults")
-
-        if results:
-            logger.info(f"Fetched camaraResults for the service: {results}\n")
-
-            parsed_results = json.loads(results)
-
-            logger.info(f"results: {results}")
-
-            #for result in parsed_results:
-            #    logger.info(f"result.get('provisioningId'): {result.get('provisioningId')}")
-        else:
-            logger.info(f"No camaraResults available for the service yet.\n")
+    # Initialize the CamaraResultsProcessor with the queue and start processing
+    camara_processor = CamaraResultsProcessor(ServiceEventManager.camara_results_queue)
+    asyncio.create_task(camara_processor.process_results())

@@ -1,9 +1,8 @@
 import stomp
 import json
-import threading
 import time
 import os
-import threading
+import asyncio
 
 from aux.config import Config
 
@@ -20,26 +19,34 @@ class ServiceEventManager:
     # Validate the environment variables before using them
     Config.validate()
 
-    broker_address = Config.broker_address
-    broker_port = Config.broker_port
-    broker_username = Config.broker_username
-    broker_password = Config.broker_password
-    service_uuid = Config.service_uuid
+    camara_results_queue = None
+    camara_results_lock = None
 
-    # Initialize a shared dictionary for storing results
-    camara_results = {}
-    camara_results_lock = threading.Lock()
+    @classmethod
+    def initialize(cls):
+        cls.broker_address = Config.broker_address
+        cls.broker_port = Config.broker_port
+        cls.broker_username = Config.broker_username
+        cls.broker_password = Config.broker_password
+        cls.service_uuid = Config.service_uuid
+
+        """Initialize shared resources."""
+        cls.camara_results_queue = asyncio.Queue()
+        cls.camara_results_lock = asyncio.Lock()
+
 
     @classmethod
     def subscribe_to_events(cls):
         """Subscribe to the events topic."""
+
+        loop = asyncio.get_event_loop()
 
         def run_listener():
             conn = stomp.Connection(
                 [(cls.broker_address, cls.broker_port)], 
                 heartbeats=(15000, 15000)
             )
-            conn.set_listener('', cls.MyListener())
+            conn.set_listener('', cls.MyListener(loop))
             conn.connect(
                 cls.broker_username, 
                 cls.broker_password, 
@@ -51,15 +58,10 @@ class ServiceEventManager:
                 f"Subscribed to {EVENT_SERVICE_ATTRCHANGED}. " 
                 f"Waiting for messages..."
             )
-            try:
-                while True:
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                logger.info("Disconnecting listener...")
-                conn.disconnect()
 
-        listener_thread = threading.Thread(target=run_listener)
-        listener_thread.daemon = True  # Allow program to exit even if thread is running
+        # Run the listener in a separate thread
+        import threading
+        listener_thread = threading.Thread(target=run_listener, daemon=True)
         listener_thread.start()
 
     @classmethod
@@ -94,8 +96,9 @@ class ServiceEventManager:
     class MyListener(stomp.ConnectionListener):
         """Custom listener to handle incoming messages from the STOMP broker."""
 
-        def __init__(self):
+        def __init__(self, loop):
             super().__init__()
+            self.loop = loop
 
         def on_message(self, frame):
             """Handle received message frames."""
@@ -111,12 +114,10 @@ class ServiceEventManager:
                         if characteristic.get("name") == "camaraResults":
                             characteristic_value = characteristic.get("value").get("value")
 
-                            with ServiceEventManager.camara_results_lock:
-                                ServiceEventManager.camara_results["camaraResults"] = characteristic_value
-
-                            logger.info(
-                                f"New camaraResults stored for UUID {service_info.get('uuid')}: "
-                                f"{characteristic_value}\\n"
+                            # Add the result to the async queue
+                            asyncio.run_coroutine_threadsafe(
+                                ServiceEventManager.camara_results_queue.put(characteristic_value),
+                                self.loop
                             )
 
             except json.JSONDecodeError:
