@@ -18,8 +18,11 @@ spec:
       ipv4Address:
         publicAddress: %s
         privateAddress: %s
-        privatePort: %s
+        publicPort: %s
       ipv6Address: %s
     qosProfile: %s
+    sink: %s
+    sinkCredential: 
+      credentialType: %s
 
 # ITAvSliceManager.profiles: {"QOS_A": {"AMBRUP": 1000, "AMBRDW": 500}, "QOS_B": {"AMBRUP": 2000, "AMBRDW": 1000}}

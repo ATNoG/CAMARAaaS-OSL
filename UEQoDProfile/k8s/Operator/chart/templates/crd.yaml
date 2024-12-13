@@ -72,7 +72,7 @@ spec:
                               type: string
                             privateAddress:
                               type: string
-                            privatePort:
+                            publicPort:
                               type: integer
                         ipv6Address:
                           type: string
@@ -85,10 +85,6 @@ spec:
                       properties:
                         credentialType:
                           type: string
-                          enum:
-                            - "PLAIN"
-                            - "ACCESSTOKEN"
-                            - "REFRESHTOKEN"
                 camaraLastRequest:
                   type: string
                 camaraResults:
@@ -98,10 +94,3 @@ spec:
                 - ITAvSliceManager
             status:
               type: object
-  scope: Namespaced
-  names:
-    plural: ue-qod-profiles
-    singular: ue-qod-profile
-    kind: UEQoDProfile
-    shortNames:
-      - uep
