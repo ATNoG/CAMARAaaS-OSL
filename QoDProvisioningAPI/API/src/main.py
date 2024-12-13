@@ -16,7 +16,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-import logging
 import asyncio
 import json
 
@@ -26,8 +25,8 @@ from sqlalchemy.orm import Session
 from routers.qod_provisioning_router import router as QoDProvisioningApiRouter
 from database.db import init_db, get_db
 from aux.service_event_manager.service_event_manager import ServiceEventManager
-from aux.camara_results_processor.camara_results_processor import CamaraResultsProcessor
-from aux.config import Config
+from aux.service_event_manager.camara_results_processor import CamaraResultsProcessor
+from config import Config
 
 # Set up logging
 logger = Config.setup_logging()
@@ -49,7 +48,6 @@ async def startup_event():
     init_db()
 
     ServiceEventManager.initialize()
-
     ServiceEventManager.subscribe_to_events()
 
     # Initialize the CamaraResultsProcessor with the queue and start processing

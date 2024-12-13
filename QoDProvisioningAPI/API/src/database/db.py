@@ -10,18 +10,22 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 import os
+from config import Config
 
 import logging
 
-logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.DEBUG)
+logger = Config.setup_logging()
 
+sqlalchemy_logger = logging.getLogger("sqlalchemy.engine")
+sqlalchemy_logger.setLevel("WARNING")
 
-# Path for SQLite database file (persisted volume)
-DB_PATH = os.getenv("SQLITE_DB_PATH", "/data/sqlite.db")
+for handler in logger.handlers:
+    sqlalchemy_logger.addHandler(handler)
+
+sqlalchemy_logger.propagate = True
 
 # SQLite database URL
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{Config.db_path}"
 
 # Create the SQLAlchemy engine
 engine = create_engine(

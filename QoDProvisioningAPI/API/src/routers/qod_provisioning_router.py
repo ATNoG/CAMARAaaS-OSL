@@ -43,7 +43,7 @@ from datetime import datetime
 import logging
 from aux.service_event_manager.service_event_manager import ServiceEventManager
 import json
-from aux.config import Config
+from config import Config
 
 # Set up logging
 logger = Config.setup_logging()
@@ -139,6 +139,13 @@ async def delete_provisioning(
     try:
         # Call the CRUD function to create the provisioning in the database
         provisioning, related_device = crud.delete_provisioning(db_session, provisioningId)
+        
+        ServiceEventManager.update_service({
+                "serviceCharacteristic": mappers.map_service_characteristics(
+                    provisioning, 
+                    "DELETE"
+                )
+            })
 
         deleted_provisioning = ProvisioningInfo(
             provisioning_id=str(provisioning.id),
@@ -149,7 +156,7 @@ async def delete_provisioning(
                     "credential_type": provisioning.sink_credential
                 },
             started_at=provisioning.started_at,
-            status=Status.REQUESTED,
+            status=provisioning.status,
             status_info=StatusInfo.DELETE_REQUESTED
         )
 

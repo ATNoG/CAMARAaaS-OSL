@@ -3,8 +3,8 @@ import json
 import time
 import os
 import asyncio
-
-from aux.config import Config
+from functools import wraps
+from config import Config
 
 # Set up logging
 logger = Config.setup_logging()
@@ -12,6 +12,26 @@ logger = Config.setup_logging()
 # Constants for STOMP service configuration
 CATALOG_UPD_SERVICE = "CATALOG.UPD.SERVICE"
 EVENT_SERVICE_ATTRCHANGED = "EVENT.SERVICE.ATTRCHANGED"
+
+
+def check_subscribe_connection(method):
+    @wraps(method)
+    def wrapper(cls, *args, **kwargs):
+        if not cls.connection or not cls.connection.is_connected():
+            logger.warning("Connection not active. Reconnecting...")
+            cls.connection = stomp.Connection(
+                [(cls.broker_address, cls.broker_port)], 
+                heartbeats=(15000, 15000)
+            )
+            cls.connection.connect(
+                cls.broker_username, 
+                cls.broker_password, 
+                wait=True
+            )
+            if cls.connection and cls.connection.is_connected():
+                logger.info("Connection is active.")
+        return method(cls, *args, **kwargs)
+    return wrapper
 
 class ServiceEventManager:
     """Manages event subscriptions and service updates using STOMP."""
@@ -21,6 +41,7 @@ class ServiceEventManager:
 
     camara_results_queue = None
     camara_results_lock = None
+    connection = None
 
     @classmethod
     def initialize(cls):
@@ -30,29 +51,26 @@ class ServiceEventManager:
         cls.broker_password = Config.broker_password
         cls.service_uuid = Config.service_uuid
 
-        """Initialize shared resources."""
+        # Initialize shared resources
         cls.camara_results_queue = asyncio.Queue()
         cls.camara_results_lock = asyncio.Lock()
+        
+        
 
 
     @classmethod
+    @check_subscribe_connection
     def subscribe_to_events(cls):
         """Subscribe to the events topic."""
 
         loop = asyncio.get_event_loop()
 
         def run_listener():
-            conn = stomp.Connection(
-                [(cls.broker_address, cls.broker_port)], 
-                heartbeats=(15000, 15000)
+            cls.connection.set_listener('', cls.MyListener(loop))
+            cls.connection.subscribe(
+                destination=EVENT_SERVICE_ATTRCHANGED,
+                id=1
             )
-            conn.set_listener('', cls.MyListener(loop))
-            conn.connect(
-                cls.broker_username, 
-                cls.broker_password, 
-                wait=True
-            )
-            conn.subscribe(destination=EVENT_SERVICE_ATTRCHANGED, id=1)
 
             logger.info(
                 f"Subscribed to {EVENT_SERVICE_ATTRCHANGED}. " 
@@ -99,6 +117,11 @@ class ServiceEventManager:
         def __init__(self, loop):
             super().__init__()
             self.loop = loop
+            
+        def get_camara_results(self, service_info):
+            for charact in service_info.get("serviceCharacteristic"):
+                if charact.get("name") == "camaraResults":
+                    return charact.get("value").get("value")
 
         def on_message(self, frame):
             """Handle received message frames."""
@@ -106,19 +129,20 @@ class ServiceEventManager:
             # Attempt to parse the body as JSON
             try:
                 message = json.loads(frame.body)
-
                 service_info = message.get("event").get("service")
                 
+                camara_results = None
                 if service_info.get("uuid") == ServiceEventManager.service_uuid:
-                    for characteristic in service_info.get("serviceCharacteristic"):
-                        if characteristic.get("name") == "camaraResults":
-                            characteristic_value = characteristic.get("value").get("value")
+                    camara_results = self.get_camara_results(service_info)
 
-                            # Add the result to the async queue
-                            asyncio.run_coroutine_threadsafe(
-                                ServiceEventManager.camara_results_queue.put(characteristic_value),
-                                self.loop
-                            )
+                # Add the result to the async queue
+                if camara_results:
+                    asyncio.run_coroutine_threadsafe(
+                        ServiceEventManager.camara_results_queue.put(
+                            camara_results
+                        ),
+                        self.loop
+                    )
 
             except json.JSONDecodeError:
-                print('Received message is not valid JSON.')
+                logger.info('Received message is not valid JSON.')

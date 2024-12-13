@@ -9,6 +9,8 @@ class Config():
     broker_username = os.getenv('BROKER_USERNAME') 
     broker_password = os.getenv('BROKER_PASSWORD') 
     service_uuid = os.getenv('SERVICE_UUID')
+    log_level = os.getenv('LOG_LEVEL', "INFO")
+    db_path = os.getenv("SQLITE_DB_PATH", "/data/sqlite.db")
 
     logger = None
 
@@ -31,9 +33,7 @@ class Config():
     @classmethod
     def setup_logging(cls):
         if cls.logger is None:
-
-            log_level = os.getenv('LOG_LEVEL', 'INFO')
-            log_level = getattr(logging, log_level.upper())
+            log_level = getattr(logging, cls.log_level.upper())
             
             # Create a logger
             cls.logger = logging.getLogger()

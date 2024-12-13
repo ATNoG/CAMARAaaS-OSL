@@ -1,5 +1,5 @@
 
-SERVICE_UUID=9c24ef26-30a0-41ad-855e-6ee1bbf0a627 
+SERVICE_UUID=0726c0c2-9fc8-4593-b2e0-8740764ae365
 
 init:
 	python3 -m venv venv && . venv/bin/activate && pip install -r requirements.txt && deactivate

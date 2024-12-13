@@ -18,7 +18,7 @@ from schemas.status import Status
 from schemas.status_changed import StatusChanged
 from schemas.status_info import StatusInfo
 from schemas.retrieve_provisioning_by_device import RetrieveProvisioningByDevice
-from aux.config import Config
+from config import Config
 
 # Set up logging
 logger = Config.setup_logging()
@@ -89,6 +89,27 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
         logger.error(f"Error creating provisioning: {e}")
         raise ValueError(f"Error creating provisioning: {e}")
 
+def get_all_provisionings(db: Session, provisioning_id: str) -> Provisioning:
+    return db.query(Provisioning).all()
+
+def update_provisioning_by_id(
+    db: Session, provisioning_id: str, provisioning_status: str,
+    provisioning_timestamp: str) -> tuple[Provisioning, Device]:
+        provisioning, device = get_provisioning_by_id(db, provisioning_id)
+        if provisioning:
+            provisioning.started_at = datetime.fromisoformat(
+                provisioning_timestamp.replace("Z", "+00:00")
+            )
+            provisioning.status = provisioning_status
+            db.commit()
+            db.refresh(provisioning)
+        logger.info(
+            f"Updated provisioning with id={provisioning_id} "
+            f"to status={provisioning_status}"
+        )
+        return provisioning, device
+            
+            
 
 def get_provisioning_by_id(db: Session, provisioning_id: str) -> tuple[Provisioning, Device]:
     """
