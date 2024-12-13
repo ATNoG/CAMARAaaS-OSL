@@ -31,7 +31,7 @@ def map_service_characteristics(provisioning, operation):
             "value": {"value": provisioning.device.ipv4_private_address or ""}
         },
         {
-            "name": "qodProv.device.ipv4Address.privatePort",
+            "name": "qodProv.device.ipv4Address.publicPort",
             "value": {"value": provisioning.device.ipv4_public_port or ""}
         },
         {
@@ -44,11 +44,19 @@ def map_service_characteristics(provisioning, operation):
         },
         {
             "name": "qodProv.operation",
-            "value": {"value": operation}  # Static value, consider dynamic handling
+            "value": {"value": operation}
         },
         {
             "name": "qodProv.provisioningId",
             "value": {"value": provisioning.id}
+        },
+        {
+            "name": "qodProv.sink",
+            "value": {"value": provisioning.sink or ""}
+        },
+        {
+            "name": "qodProv.sinkCredential.credentialType",
+            "value": {"value": provisioning.sink_credential or ""}
         }
     ]
     return characteristics
