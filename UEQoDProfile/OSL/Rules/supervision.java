@@ -21,11 +21,14 @@ spec:
       ipv4Address:
         publicAddress: %s
         privateAddress: %s
-        privatePort: %s
+        publicPort: %s
       ipv6Address: %s
     qosProfile: %s
+    sink: %s
+    sinkCredential:
+        credentialType: %s
 """
-, getCharValAsString("ITAvSliceManager.slice"), getCharValAsString("ITAvSliceManager.defaultProfile.AMBRUP"), getCharValAsString("ITAvSliceManager.defaultProfile.AMBRDW"), getCharValAsString("ITAvSliceManager.profiles"), getCharValAsString("qodProv.operation"), getCharValAsString("qodProv.provisioningId"), getCharValAsString("qodProv.device.phoneNumber"), getCharValAsString("qodProv.device.networkAccessIdentifier"), getCharValAsString("qodProv.device.ipv4Address.publicAddress"), getCharValAsString("qodProv.device.ipv4Address.privateAddress"), getCharValAsString("qodProv.device.ipv4Address.privatePort"), getCharValAsString("qodProv.device.ipv6Address"), getCharValAsString("qodProv.qosProfile")));
+, getCharValAsString("ITAvSliceManager.slice"), getCharValAsString("ITAvSliceManager.defaultProfile.AMBRUP"), getCharValAsString("ITAvSliceManager.defaultProfile.AMBRDW"), getCharValAsString("ITAvSliceManager.profiles"), getCharValAsString("qodProv.operation"), getCharValAsString("qodProv.provisioningId"), getCharValAsString("qodProv.device.phoneNumber"), getCharValAsString("qodProv.device.networkAccessIdentifier"), getCharValAsString("qodProv.device.ipv4Address.publicAddress"), getCharValAsString("qodProv.device.ipv4Address.privateAddress"), getCharValAsString("qodProv.device.ipv4Address.publicPort"), getCharValAsString("qodProv.device.ipv6Address"), getCharValAsString("qodProv.qosProfile"), getCharValAsString("qodProv.sink"), getCharValAsString("qodProv.sinkCredential.credentialType")));
 setServiceRefCharacteristicsValues("UE QoD Profile Enforcer (RFS)", charvals);
 }
 setCharValFromStringType("camaraResults", getServiceRefPropValue("UE QoD Profile Enforcer (RFS)", "serviceCharacteristicValue", "spec.camaraResults"));

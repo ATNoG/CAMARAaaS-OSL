@@ -186,7 +186,7 @@
             }
         },
         {
-            "name": "qodProv.device.ipv4Address.privatePort",
+            "name": "qodProv.device.ipv4Address.publicPort",
             "configurable": false,
             "description": null,
             "extensible": null,
@@ -203,6 +203,38 @@
         },
         {
             "name": "qodProv.device.ipv6Address",
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.sink",
+            "configurable": false,
+            "description": null,
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
+        },
+        {
+            "name": "qodProv.sinkCredential.credentialType",
             "configurable": false,
             "description": null,
             "extensible": null,
