@@ -13,6 +13,7 @@ REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 KUBECONFIG ?= /etc/rancher/k3s/k3s.yaml 
 NAMESPACE = itav-slice-manager-client
 
+SERVICE_UUID = 
 
 # DOCKER
 #
@@ -42,7 +43,7 @@ terminate-local-testing-environment:
 	kubectl delete -f ../CR/crd.yaml && kubectl delete -f ./manifests/operator-namespace.yaml && kubectl delete -f ./manifests/operator-role.yaml
 
 run-local:
-	. src/venv/bin/activate && CR_GROUP="av.it.pt" CR_VERSION="v1" CR_PLURAL="camaraaas-qod-provisioning-apis" SLICE_MANAGER_BASE_URL="http://10.255.28.141:8000" python3 src/k8s_operator.py
+	. src/venv/bin/activate && CR_GROUP="av.it.pt" CR_VERSION="v1" CR_PLURAL="camaraaas-qod-provisioning-apis" python3 src/k8s_operator.py
 
 
 # K8S Manifests
@@ -71,6 +72,10 @@ create-cr:
 
 delete-cr:
 	kubectl delete -f ../CR/cr_simple.yaml || true
+
+describe-cr:
+	kubectl describe camaraaas-qod-provisioning-apis simple-qod-provisioning
+
 
 recreate-crd: delete-crd create-crd
 recreate-cr: delete-cr create-cr

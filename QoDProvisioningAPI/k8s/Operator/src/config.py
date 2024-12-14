@@ -11,7 +11,11 @@ class Config():
     cr_group = os.getenv('CR_GROUP')
     cr_version = os.getenv('CR_VERSION')
     cr_plural = os.getenv('CR_PLURAL')
-    # Set up the slice manager
+        
+    camara_image_repo = "atnog-harbor.av.it.pt/camaraaas" 
+    camara_image = "camaraaas-qod-provisioning-api:latest"
+    camara_image_port = 8000
+    
     logger = None
     
     # Logging

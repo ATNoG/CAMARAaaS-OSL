@@ -4,7 +4,8 @@ metadata:
   name: example-qod-provisioning
 spec:
   messageBroker:
-    url: "https://message-broker.example.com"
+    address: "https://message-broker.example.com"
+    port: 9000
     username: "brokerUser" # Replace with Secret if adapted
     password: "brokerPassword" # Replace with Secret if adapted
   serviceUnderControl:

@@ -4,7 +4,8 @@ metadata:
   name: _to_replace_
 spec:
   messageBroker:
-    url: "%s"
+    address: "%s"
+    port: %s
     username: "%s"
     password: "%s"
   serviceUnderControl:

@@ -35,7 +35,7 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
                 f"deployed in namespace '{cr_namespace}'. Will now create a "
                 "a pod and a service to offer this resource"
             )
-            self._deploy_CAMARAaaS(cr_uuid, cr_name, cr_namespace)
+            self._deploy_CAMARAaaS(cr_uuid, cr_name, cr_namespace, spec)
         
         elif event == "UPDATE":
             logger.info(
@@ -58,7 +58,7 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
         
  
  
-    def _deploy_CAMARAaaS(self, cr_uuid, cr_name, cr_namespace):
+    def _deploy_CAMARAaaS(self, cr_uuid, cr_name, cr_namespace, spec):
         pod_name = f"camara-{cr_uuid}-pod"
         service_name = f"camara-{cr_uuid}-service"
         app_label = f"camara-{cr_uuid}-app"
@@ -74,8 +74,30 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
             "spec": {
                 "containers": [{
                     "name": "app-container",
-                    "image": "nginx",
-                    "ports": [{"containerPort": 80}]
+                    "image": f"{Config.camara_image_repo}/{Config.camara_image}",
+                    "ports": [{"containerPort": Config.camara_image_port}],
+                    "env": [
+                        {
+                            "name": "BROKER_ADDRESS",
+                            "value": spec["messageBroker"]["address"]
+                        },
+                        {
+                            "name": "BROKER_PORT",
+                            "value": str(spec["messageBroker"]["port"])
+                        },
+                        {
+                            "name": "BROKER_USERNAME",
+                            "value": spec["messageBroker"]["username"]
+                        },
+                        {
+                            "name": "BROKER_PASSWORD",
+                            "value": spec["messageBroker"]["password"]
+                        },
+                        {
+                            "name": "SERVICE_UUID",
+                            "value": spec["serviceUnderControl"]["uuid"]
+                        }
+                    ]
                 }]
             }
         }
@@ -90,7 +112,12 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
             "metadata": {"name": service_name},
             "spec": {
                 "selector": {"app": app_label},
-                "ports": [{"port": 80, "targetPort": 80}],  # No nodePort defined
+                "ports": [
+                    {
+                        "port": Config.camara_image_port,
+                        "targetPort": Config.camara_image_port
+                    }
+                ],
                 "type": "NodePort"
             }
         }

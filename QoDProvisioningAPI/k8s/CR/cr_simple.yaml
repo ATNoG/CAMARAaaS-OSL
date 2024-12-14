@@ -4,8 +4,9 @@ metadata:
   name: simple-qod-provisioning
 spec:
   messageBroker:
-    url: "https://message-broker.example.com"
-    username: "brokerUser" # Replace with Secret if adapted
-    password: "brokerPassword" # Replace with Secret if adapted
+    address: "10.255.28.137"
+    port: 61613
+    username: "artemis" # Replace with Secret if adapted
+    password: "artemis" # Replace with Secret if adapted
   serviceUnderControl:
-    uuid: "123e4567-e89b-12d3-a456-426614174000"
+    uuid: "cebe4767-92da-4caf-ac9a-fbe8262502df"
