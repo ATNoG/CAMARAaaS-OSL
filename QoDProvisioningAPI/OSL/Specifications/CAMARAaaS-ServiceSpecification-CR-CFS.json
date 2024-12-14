@@ -152,6 +152,22 @@
                 "endDateTime": "2043-12-31T23:59:59.999Z",
                 "startDateTime": "2024-01-01T00:00:00.001Z"
             }
+        },
+        {
+            "name": "camaraAPI.results",
+            "configurable": false,
+            "description": "This characteristic (view-only) will be populated with the CAMARA API Processed Results",
+            "extensible": null,
+            "maxCardinality": 1,
+            "minCardinality": 0,
+            "regex": null,
+            "valueType": "TEXT",
+            "serviceSpecCharRelationship": [],
+            "serviceSpecCharacteristicValue": [],
+            "validFor": {
+                "endDateTime": "2043-12-31T23:59:59.999Z",
+                "startDateTime": "2024-01-01T00:00:00.001Z"
+            }
         }
     ]
 }

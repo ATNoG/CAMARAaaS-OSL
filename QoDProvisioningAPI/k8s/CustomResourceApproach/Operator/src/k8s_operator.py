@@ -49,6 +49,10 @@ def on_update_camaraaas_qod_prov_api(spec, old, new, diff, meta, logger, **kwarg
 def on_delete_camaraaas_qod_prov_api(spec, old, new, diff, meta, logger, **kwargs):
     camaraaas_handler.process_camaraaas_qod_prov_api("DELETE", spec, meta)
 
+@kopf.timer(Config.cr_group, Config.cr_version, Config.cr_plural, interval=15)
+def periodic_operation(spec, meta, status, namespace, logger, **kwargs):
+    camaraaas_handler.update_camara_results(spec, meta)
+
 def main():
     kopf.run()
     

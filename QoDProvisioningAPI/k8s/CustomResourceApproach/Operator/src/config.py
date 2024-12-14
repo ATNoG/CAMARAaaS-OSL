@@ -2,10 +2,6 @@ import logging
 import os
 import sys
 
-# export CR_GROUP="av.it.pt"
-# export CR_VERSION="apiextensions.k8s.io/v1"
-# export CR_PLURAL="networkslice-ues"
-
 class Config():
     # Set up custom resources info
     cr_group = os.getenv('CR_GROUP')
@@ -35,7 +31,9 @@ class Config():
             handler.setLevel(log_level)
 
             # Create a formatter and add it to the handler
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
             handler.setFormatter(formatter)
 
             # Add the handler to the logger
