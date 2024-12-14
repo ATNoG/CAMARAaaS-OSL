@@ -26,3 +26,6 @@ RUN mkdir -p /data
 
 # Set environment variables
 ENV SQLITE_DB_PATH=/data/sqlite.db
+
+# Set the command to run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
