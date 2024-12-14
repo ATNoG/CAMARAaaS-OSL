@@ -11,7 +11,7 @@ logger = Config.setup_logging()
 
 class CamaraResultsProcessor:
     """Handles processing of camara results from the queue."""
-    
+
     def __init__(self, queue):
         self.queue = queue
         self.db_session = next(get_db())
@@ -33,6 +33,7 @@ class CamaraResultsProcessor:
                     f"Amounf of processed CAMARA Results: {len(results)}."
                 )
                 logger.debug(f"Processed camaraResults: {results}")
+                
                 self.update_provisionings(results)
         except asyncio.CancelledError:
             logger.info("CamaraResultsProcessor stopped gracefully.")
