@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ include "camaraaas-qod-provisioning-api-chart.fullname" . }}-deployment'
+  labels:
+  {{- include "camaraaas-qod-provisioning-api-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: camaraaas-qod-provisioning-api
+    {{- include "camaraaas-qod-provisioning-api-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: camaraaas-qod-provisioning-api
+      {{- include "camaraaas-qod-provisioning-api-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: camaraaas-qod-provisioning-api-container
+          env:
+          - name: BROKER_ADDRESS
+            value:  {{ quote .Values.broker.address }}
+          - name: BROKER_PORT
+            value: {{ quote .Values.broker.port }}
+          - name: BROKER_USERNAME
+            value: {{ quote .Values.broker.username }}
+          - name: BROKER_PASSWORD
+            value:  {{ quote .Values.broker.password }}
+          - name: SERVICE_UUID
+            value: {{ required "The 'serviceUUID' value must be set!" .Values.serviceUUID }}
+          image:  '{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}'
+          ports:
+            - containerPort: {{ .Values.deployment.image.containerPort }}
+          resources: {}
+      restartPolicy: Always
