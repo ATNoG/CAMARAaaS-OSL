@@ -21,3 +21,4 @@ setCharValFromStringType("camaraAPI.status", getServiceRefPropValue("CAMARAaaS -
 setCharValFromStringType("camaraAPI.url", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.url"));
 setCharValFromStringType("camaraAPI.username", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.username"));
 setCharValFromStringType("camaraAPI.password", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.password"));
+setCharValFromStringType("camaraAPI.results", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.results"));
