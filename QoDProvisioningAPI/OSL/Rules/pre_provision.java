@@ -7,12 +7,13 @@ metadata:
   name: _to_replace_
 spec:
   messageBroker:
-    url: "%s"
+    address: "%s"
+    port: %d
     username: "%s"
     password: "%s"
   serviceUnderControl:
     uuid: "%s"
 """
-, getCharValAsString("messageBroker.url"), getCharValAsString("messageBroker.username"), getCharValAsString("messageBroker.password"), getCharValAsString("serviceUnderControl.uuid")));
-setServiceRefCharacteristicsValues("CAMARAaaS - QoD Provisioning API (RFS)	", charvals);
+, getCharValAsString("messageBroker.address"), getCharValNumber("messageBroker.port"), getCharValAsString("messageBroker.username"), getCharValAsString("messageBroker.password"), getCharValAsString("serviceUnderControl.uuid")));
+setServiceRefCharacteristicsValues("CAMARAaaS - QoD Provisioning API CR (RFS)", charvals);
 }

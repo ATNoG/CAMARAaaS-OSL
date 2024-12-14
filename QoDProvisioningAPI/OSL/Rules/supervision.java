@@ -7,14 +7,17 @@ metadata:
   name: _to_replace_
 spec:
   messageBroker:
-    url: "%s"
+    address: "%s"
+    port: %d
     username: "%s"
     password: "%s"
   serviceUnderControl:
     uuid: "%s"
 """
-, getCharValAsString("messageBroker.url"), getCharValAsString("messageBroker.username"), getCharValAsString("messageBroker.password"), getCharValAsString("serviceUnderControl.uuid")));
-setServiceRefCharacteristicsValues("CAMARAaaS - QoD Provisioning API (RFS)	", charvals);
+, getCharValAsString("messageBroker.address"), getCharValNumber("messageBroker.port"), getCharValAsString("messageBroker.username"), getCharValAsString("messageBroker.password"), getCharValAsString("serviceUnderControl.uuid")));
+setServiceRefCharacteristicsValues("CAMARAaaS - QoD Provisioning API CR (RFS)", charvals);
 }
-setCharValFromStringType("camaraAPI.status", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API (RFS)	", "serviceCharacteristicValue", "spec.camaraAPI.status"));
-setCharValFromStringType("camaraAPI.url", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API (RFS)	", "serviceCharacteristicValue", "spec.camaraAPI.url"));
+setCharValFromStringType("camaraAPI.status", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.status"));
+setCharValFromStringType("camaraAPI.url", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.url"));
+setCharValFromStringType("camaraAPI.username", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.username"));
+setCharValFromStringType("camaraAPI.password", getServiceRefPropValue("CAMARAaaS - QoD Provisioning API CR (RFS)", "serviceCharacteristicValue", "spec.camaraAPI.password"));
