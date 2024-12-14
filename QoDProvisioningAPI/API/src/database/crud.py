@@ -24,6 +24,101 @@ from config import Config
 logger = Config.setup_logging()
 
 
+def retrieve_fields_to_check(device: Device) -> list:
+    """
+    Retrieves the list of fields to check for a given device.
+
+    Args:
+        device: The device object that contains the fields to be checked.
+
+    Returns:
+        A list of tuples, each containing the field name and its corresponding value.
+    """
+    return [
+        ("phone_number", device.phone_number),
+        (
+            "ipv4_public_address", 
+            device.ipv4_address.public_address if device.ipv4_address else None
+        ),
+        (
+            "ipv4_private_address", 
+            device.ipv4_address.private_address if device.ipv4_address else None
+        ),
+        (
+            "ipv4_public_port", 
+            device.ipv4_address.public_port if device.ipv4_address else None
+        ),
+        ("ipv6_address", device.ipv6_address),
+        ("network_access_identifier", device.network_access_identifier)
+    ]
+        
+
+def find_existing_device(db: Session, fields_to_check: list) -> Device:
+    """
+    Find an existing device based on the fields provided.
+
+    Args:
+        db: Database session.
+        fields_to_check: List of tuples with field names and values.
+
+    Returns:
+        The existing device if found, None otherwise.
+    """
+    for field, value in fields_to_check:
+        if value:  # Only search if the field has a value
+            existing_device = db.query(Device).filter_by(**{field: value}).first()
+            
+            if existing_device:
+                logger.debug(f"Existing device found: {existing_device}")
+
+                return existing_device
+    return None
+
+def validate_device_fields(create_provisioning):
+    """
+    Validates the fields in the device object and assigns them to variables.
+
+    Args:
+        create_provisioning: The provisioning object containing the device to validate.
+
+    Returns:
+        A dictionary containing the validated fields.
+    """
+    device = create_provisioning.device
+
+    # Validate phone_number and network_access_identifier
+    phone_number = device.phone_number if device.phone_number else None
+    network_access_identifier = device.network_access_identifier \
+        if device.network_access_identifier else None
+
+    # Validate ipv4_address and its subfields
+    ipv4_address = device.ipv4_address
+    if ipv4_address:
+        ipv4_public_address = ipv4_address.public_address \
+            if ipv4_address.public_address else None
+        ipv4_private_address = ipv4_address.private_address \
+            if ipv4_address.private_address else None
+        ipv4_public_port = ipv4_address.public_port \
+            if ipv4_address.public_port else None
+    else:
+        ipv4_public_address = None
+        ipv4_private_address = None
+        ipv4_public_port = None
+
+    # Validate ipv6_address
+    ipv6_address = device.ipv6_address if device.ipv6_address else None
+
+    # Return all the validated fields in a dictionary
+    return {
+        'phone_number': phone_number,
+        'network_access_identifier': network_access_identifier,
+        'ipv4_public_address': ipv4_public_address,
+        'ipv4_private_address': ipv4_private_address,
+        'ipv4_public_port': ipv4_public_port,
+        'ipv6_address': ipv6_address
+    }
+
+
 def create_provisioning(db: Session, create_provisioning: CreateProvisioning) -> Provisioning:
     """
     Creates a new provisioning in the database.
@@ -38,28 +133,55 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
     try:
         logger.debug(f"Received provisioning data: {create_provisioning}\n")
 
-        # Check if the device already exists
-        existing_device = db.query(Device)\
-            .filter_by(phone_number=create_provisioning.device.phone_number)\
-            .first()
+        device = create_provisioning.device
 
+        fields_to_check = retrieve_fields_to_check(device)
+
+        # Find an existing device if any field matches
+        existing_device = find_existing_device(db, fields_to_check)
+
+        # If device exists, check for field differences
         if existing_device:
-            logger.debug(
-                "Device with phone number %s already exists with ID %s",
-                create_provisioning.device.phone_number,
-                existing_device.id
-            )
+            # Compare provided fields with the existing device fields
+            differences = [
+                (field, value, getattr(existing_device, field) != value)
+                for field, value in fields_to_check
+            ]
+            
+            # Check if there's at least one difference, and whether a new field is being added
+            new_field_added = False
+            for field, value, differs in differences:
+                if differs:
+                    existing_value = getattr(existing_device, field)
+                    
+                    if existing_value is None:  # Field doesn't exist in the existing device
+                        logger.info(f"Adding new field {field} to existing device.")
+                        setattr(existing_device, field, value)
+                        new_field_added = True
+                    else:
+                        # If any field differs, raise a conflict
+                        logger.debug(f"Device already exists, but fields differ: {field}")
+                        raise HTTPException(
+                            status_code=409,
+                            detail="Device already exists, but fields differ."
+                        )
+            
+            # If no differences found, reuse the existing device
             new_device = existing_device
         else:
-            # Create a new device instance
+            # Validate fields
+            validated_fields = validate_device_fields(create_provisioning)
+
+            # Create a new device instance using the validated fields
             new_device = Device(
-                phone_number=create_provisioning.device.phone_number,
-                network_access_identifier=create_provisioning.device.network_access_identifier,
-                ipv4_public_address=create_provisioning.device.ipv4_address.public_address,
-                ipv4_private_address=create_provisioning.device.ipv4_address.private_address,
-                ipv4_public_port=create_provisioning.device.ipv4_address.public_port,
-                ipv6_address=create_provisioning.device.ipv6_address
+                phone_number=validated_fields['phone_number'],
+                network_access_identifier=validated_fields['network_access_identifier'],
+                ipv4_public_address=validated_fields['ipv4_public_address'],
+                ipv4_private_address=validated_fields['ipv4_private_address'],
+                ipv4_public_port=validated_fields['ipv4_public_port'],
+                ipv6_address=validated_fields['ipv6_address']
             )
+
 
             # Add the new device to the session
             db.add(new_device)
@@ -154,41 +276,67 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
     Returns:
         The ProvisioningInfo object or None if not found.
     """
+    from fastapi import HTTPException
+
     try:
         logger.debug(f"Received retrieve provisioning by device data: {retrieve_provisioning_by_device}\n")
 
-        # Check if the device exists
-        if device_data.get("phoneNumber"):
-            existing_device = db.query(Device).filter_by(
-                phone_number=device_data["phoneNumber"]
-            ).first()
-        elif device_data.get("ipv4Address"):
-            existing_device = db.query(Device).filter_by(
-                ipv4_address=device_data["ipv4Address"]
-            ).first()
-        elif device_data.get("ipv6Address"):
-            existing_device = db.query(Device).filter_by(
-                ipv6_address=device_data["ipv6Address"]
-            ).first()
-        elif device_data.get("networkAccessIdentifier"):
-            existing_device = db.query(Device).filter_by(
-                network_access_identifier=device_data["networkAccessIdentifier"]
-            ).first()
+        # Validate if any field to search for is provided
+        device = retrieve_provisioning_by_device.device
+        if not (
+            device.phone_number or 
+            (device.ipv4_address and device.ipv4_address.public_address) or 
+            (device.ipv4_address and device.ipv4_address.private_address) or 
+            (device.ipv4_address and device.ipv4_address.public_port) or 
+            device.ipv6_address or 
+            device.network_access_identifier
+        ):
+            raise HTTPException(
+                status_code=400, 
+                detail="No search fields provided to retrieve the device."
+            )
 
+        fields_to_check = retrieve_fields_to_check(device)
+
+        # Iterate through the fields to check for the provided values and query the DB
+        for field, value in fields_to_check:
+            if value:  # Only search if the field has a value
+                existing_device = db.query(Device).filter_by(**{field: value}).first()
+                logger.info(f"Existing device found for field {field}: {existing_device}")
+                
+                if existing_device:  # Stop searching as soon as we find a match
+                    break
+
+        # If a device was found, we need to check all fields to ensure they match
         if existing_device:
+            # Compare all fields to check if any field differs
+            differences = []
+            for field, value in fields_to_check:
+                if value and getattr(existing_device, field) != value:
+                    differences.append((field, value))
+
+            # If any field differs, raise a conflict (not found)
+            if differences:
+                logger.debug(f"Device fields differ: {differences}")
+                raise HTTPException(
+                    status_code=404,
+                    detail="Device found, but fields differ."
+                )
+            
+            logger.info("Device found and fields match, proceeding with provisioning.")
             provisioning = db.query(Provisioning).filter_by(device_id=existing_device.id).first()
 
             if provisioning:
                 return provisioning, existing_device
-        
         else:
-            logger.debug(f"Device with phone number {retrieve_provisioning_by_device.device.phone_number} not found.\n")
-            raise HTTPException(status_code=404, detail=f"Device with phone number {retrieve_provisioning_by_device.device.phone_number} not found.")
-        
+            logger.debug("Device not found.\n")
+            raise HTTPException(status_code=404, detail="Device not found.")
+
     except SQLAlchemyError as e:
         db.rollback()
         logger.error(f"Error fetching provisioning by device: {e}")
         raise ValueError(f"Error fetching provisioning by device: {e}")
+
 
 
 def delete_provisioning(db: Session, provisioning_id: str) -> tuple[Provisioning, Device]:
