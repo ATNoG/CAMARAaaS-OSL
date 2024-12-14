@@ -57,6 +57,35 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
             self._delete_CAMARAaaS(cr_uuid, cr_name, cr_namespace)
         
  
+    def update_camara_results(self, spec, metadata):
+        if "camaraAPI" in spec:
+            try:
+                response = requests.get(
+                    f"{spec['camaraAPI']['url']}/osl/current-camara-results"
+                )
+                # Validate the HTTP response status
+                if response.status_code == 200:
+                    results = response.json()
+                    logger.info(f"Processed CAMARA Results: {results}")
+                    self._process_obtained_camara_results(
+                        metadata['namespace'],
+                        metadata['name'],
+                        results
+                    )
+                else:
+                    logger.error(
+                        "Could not obtain processed CAMARA Results "
+                        f"for the API available at {spec['camaraAPI']['url']}. "
+                        f"Got HTTP Status Code {response.status_code}. "
+                        f"Response Text: {response.text}"
+                    )
+            except Exception as e:
+                logger.error(
+                        "Could not obtain processed CAMARA Results "
+                        f"for the API available at {spec['camaraAPI']['url']}. "
+                        f"Reason: {e}."
+                    )
+                
  
     def _deploy_CAMARAaaS(self, cr_uuid, cr_name, cr_namespace, spec):
         pod_name = f"camara-{cr_uuid}-pod"
@@ -181,7 +210,6 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
 
     
     def _process_successful_deployment(self, namespace, name, url):
-
         patch = {
             "spec": {
                 "camaraAPI": {
@@ -192,8 +220,7 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
                 }
             }
         }
-
-    
+        
         try:
             # Apply the patch to update 'spec.data2' of the custom resource
             self.custom_objects_api.patch_namespaced_custom_object(
@@ -211,6 +238,35 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
         except client.exceptions.ApiException as e:
             logger.error(
                 "Exception when updating 'spec.camaraAPI' "
+                f"in custom resource: {e}")
+    
+
+    def _process_obtained_camara_results(self, namespace, name, results):
+        patch = {
+            "spec": {
+                "camaraAPI": {
+                    "results": json.dumps(results)
+                }
+            }
+        }
+    
+        try:
+            # Apply the patch to update 'spec.data2' of the custom resource
+            self.custom_objects_api.patch_namespaced_custom_object(
+                group=Config.cr_group,
+                version=Config.cr_version,
+                namespace=namespace,
+                plural=Config.cr_plural,
+                name=name,
+                body=patch
+            )
+            logger.info(
+                f"Updated 'spec.camaraAPI.results' for {name} in "
+                f"{namespace} to {patch}")
+
+        except client.exceptions.ApiException as e:
+            logger.error(
+                "Exception when updating 'spec.camaraAPI.results' "
                 f"in custom resource: {e}")
     
 

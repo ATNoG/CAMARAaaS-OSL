@@ -23,6 +23,8 @@ from fastapi import FastAPI
 from sqlalchemy.orm import Session
 
 from routers.qod_provisioning_router import router as QoDProvisioningApiRouter
+from routers.osl import router as OSLRouter
+
 from database.db import init_db, get_db
 from aux.service_event_manager.service_event_manager import ServiceEventManager
 from aux.service_event_manager.camara_results_processor import CamaraResultsProcessor
@@ -89,6 +91,7 @@ app = FastAPI(
 )
 
 app.include_router(QoDProvisioningApiRouter)
+app.include_router(OSLRouter)
 
 @app.on_event("startup")
 async def startup_event():

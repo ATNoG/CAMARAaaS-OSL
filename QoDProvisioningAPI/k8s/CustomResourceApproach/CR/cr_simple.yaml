@@ -9,4 +9,4 @@ spec:
     username: "artemis" # Replace with Secret if adapted
     password: "artemis" # Replace with Secret if adapted
   serviceUnderControl:
-    uuid: "cebe4767-92da-4caf-ac9a-fbe8262502df"
+    uuid: "6b6b2f37-b232-4a6a-b9bf-55f96dbdb773"
