@@ -1,0 +1,13 @@
+kubernetesClusterDomain: cluster.local
+deployment:
+  image:
+    repository: atnog-harbor.av.it.pt/camaraaas/camaraaas-qod-provisioning-api
+    tag: latest
+    containerPort: 8000
+  replicas: 1
+broker:
+  address: 10.255.28.137
+  port: 61613
+  username: artemis
+  password: artemis
+#serviceUUID: must be set by the client
