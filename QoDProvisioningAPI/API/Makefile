@@ -4,7 +4,7 @@ DOCKER_REPOSITORY_IMAGE_NAME = camaraaas-qod-provisioning-api
 DOCKER_REPOSITORY_TAG = latest
 REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 
-SERVICE_UUID=1450fde5-bae5-4098-9aac-7b713a97a14b
+SERVICE_UUID=6b6b2f37-b232-4a6a-b9bf-55f96dbdb773
 
 # API
 init:
