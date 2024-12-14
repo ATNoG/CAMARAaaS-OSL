@@ -148,19 +148,24 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
                 for field, value in fields_to_check
             ]
             
-            # Check if there's at least one difference, and whether a new field is being added
+            # Check if there's at least one difference, 
+            # and whether a new field is being added
             new_field_added = False
             for field, value, differs in differences:
                 if differs:
                     existing_value = getattr(existing_device, field)
                     
-                    if existing_value is None:  # Field doesn't exist in the existing device
-                        logger.info(f"Adding new field {field} to existing device.")
+                    if existing_value is None: # Field doesn't exist in the existing device
+                        logger.debug(
+                            f"Adding new field {field} to existing device."
+                        )
                         setattr(existing_device, field, value)
                         new_field_added = True
                     else:
                         # If any field differs, raise a conflict
-                        logger.debug(f"Device already exists, but fields differ: {field}")
+                        logger.debug(
+                            f"Device already exists, but fields differ: {field}"
+                        )
                         raise HTTPException(
                             status_code=409,
                             detail="Device already exists, but fields differ."
@@ -181,7 +186,6 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
                 ipv4_public_port=validated_fields['ipv4_public_port'],
                 ipv6_address=validated_fields['ipv6_address']
             )
-
 
             # Add the new device to the session
             db.add(new_device)
@@ -212,24 +216,50 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
         raise ValueError(f"Error creating provisioning: {e}")
 
 def get_all_provisionings(db: Session, provisioning_id: str) -> Provisioning:
+    """
+    Retrieves all provisioning records from the database.
+
+    Args:
+        db: Database session.
+        provisioning_id: The ID of the provisioning to query. Although it's passed, 
+                         it is not used in the query, and all provisionings are returned.
+
+    Returns:
+        A list of all provisioning records.
+    """
     return db.query(Provisioning).all()
 
 def update_provisioning_by_id(
     db: Session, provisioning_id: str, provisioning_status: str,
     provisioning_timestamp: str) -> tuple[Provisioning, Device]:
-        provisioning, device = get_provisioning_by_id(db, provisioning_id)
-        if provisioning:
-            provisioning.started_at = datetime.fromisoformat(
-                provisioning_timestamp.replace("Z", "+00:00")
-            )
-            provisioning.status = provisioning_status
-            db.commit()
-            db.refresh(provisioning)
-        logger.info(
-            f"Updated provisioning with id={provisioning_id} "
-            f"to status={provisioning_status}"
+    """
+    Updates the status and timestamp of a provisioning record by its ID.
+
+    Args:
+        db: Database session.
+        provisioning_id: The ID of the provisioning to update.
+        provisioning_status: The new status for the provisioning.
+        provisioning_timestamp: The timestamp when the provisioning started.
+
+    Returns:
+        A tuple containing the updated Provisioning object and the associated Device object.
+
+    Raises:
+        HTTPException: If the fields of the existing device differ during an update.
+    """
+    provisioning, device = get_provisioning_by_id(db, provisioning_id)
+    if provisioning:
+        provisioning.started_at = datetime.fromisoformat(
+            provisioning_timestamp.replace("Z", "+00:00")
         )
-        return provisioning, device
+        provisioning.status = provisioning_status
+        db.commit()
+        db.refresh(provisioning)
+    logger.debug(
+        f"Updated provisioning with id={provisioning_id} "
+        f"to status={provisioning_status}"
+    )
+    return provisioning, device
             
             
 
@@ -257,7 +287,10 @@ def get_provisioning_by_id(db: Session, provisioning_id: str) -> tuple[Provision
             
         else:
             logger.debug(f"Provisioning with ID {provisioning_id} not found.\n")
-            raise HTTPException(status_code=404, detail=f"Provisioning with ID {provisioning_id} not found.")
+            raise HTTPException(
+                status_code=404, 
+                detail=f"Provisioning with ID {provisioning_id} not found."
+            )
 
     except SQLAlchemyError as e:
         db.rollback()
@@ -279,7 +312,9 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
     from fastapi import HTTPException
 
     try:
-        logger.debug(f"Received retrieve provisioning by device data: {retrieve_provisioning_by_device}\n")
+        logger.debug(
+            f"Received retrieve provisioning by device data: {retrieve_provisioning_by_device}\n"
+        )
 
         # Validate if any field to search for is provided
         device = retrieve_provisioning_by_device.device
@@ -302,7 +337,9 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
         for field, value in fields_to_check:
             if value:  # Only search if the field has a value
                 existing_device = db.query(Device).filter_by(**{field: value}).first()
-                logger.info(f"Existing device found for field {field}: {existing_device}")
+                logger.debug(
+                    f"Existing device found for field {field}: {existing_device}"
+                )
                 
                 if existing_device:  # Stop searching as soon as we find a match
                     break
@@ -323,7 +360,9 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
                     detail="Device found, but fields differ."
                 )
             
-            logger.info("Device found and fields match, proceeding with provisioning.")
+            logger.debug(
+                "Device found and fields match, proceeding with provisioning."
+            )
             provisioning = db.query(Provisioning).filter_by(device_id=existing_device.id).first()
 
             if provisioning:
@@ -355,7 +394,10 @@ def delete_provisioning(db: Session, provisioning_id: str) -> tuple[Provisioning
 
         if not provisioning:
             logger.debug(f"Provisioning with ID {provisioning_id} not found.\n")
-            raise HTTPException(status_code=404, detail=f"Provisioning with ID {provisioning_id} not found.")
+            raise HTTPException(
+                status_code=404, 
+                detail=f"Provisioning with ID {provisioning_id} not found."
+            )
 
         # Check if the device already exists
         related_device = db.query(Device).filter_by(id=provisioning.device_id).first()
