@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-# @Author: Eduardo Santos
-# @Date:   2024-11-28 13:00:57
-# @Last Modified by:   Eduardo Santos
-# @Last Modified time: 2024-12-09 11:30:21
+# @Authors: 
+#   Eduardo Santos (eduardosantoshf@av.it.pt)
+#   Rafael Direito (rdireito@av.it.pt)
+# @Organization:
+#   Instituto de Telecomunicações, Aveiro (ITAv)
+#   Aveiro, Portugal
+# @Date:
+#   December 2024
 
 from sqlalchemy import (
     Column,

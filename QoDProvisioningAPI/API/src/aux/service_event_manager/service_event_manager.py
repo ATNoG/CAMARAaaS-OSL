@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Authors: 
+#   Eduardo Santos (eduardosantoshf@av.it.pt)
+#   Rafael Direito (rdireito@av.it.pt)
+# @Organization:
+#   Instituto de Telecomunicações, Aveiro (ITAv)
+#   Aveiro, Portugal
+# @Date:
+#   December 2024
+
 import stomp
 import json
 import time
@@ -8,11 +18,6 @@ from config import Config
 
 # Set up logging
 logger = Config.setup_logging()
-
-# Constants for STOMP service configuration
-CATALOG_UPD_SERVICE = "CATALOG.UPD.SERVICE"
-EVENT_SERVICE_ATTRCHANGED = "EVENT.SERVICE.ATTRCHANGED"
-# TODO: move these variables to config
 
 def check_subscribe_connection(method):
     @wraps(method)
@@ -50,6 +55,8 @@ class ServiceEventManager:
         cls.broker_username = Config.broker_username
         cls.broker_password = Config.broker_password
         cls.service_uuid = Config.service_uuid
+        cls.catalog_upd_service = Config.catalog_upd_service
+        cls.event_service_attrchanged = Config.event_service_attrchanged
 
         # Initialize shared resources
         cls.camara_results_queue = asyncio.Queue()
@@ -68,12 +75,12 @@ class ServiceEventManager:
         def run_listener():
             cls.connection.set_listener('', cls.MyListener(loop))
             cls.connection.subscribe(
-                destination=EVENT_SERVICE_ATTRCHANGED,
+                destination=cls.event_service_attrchanged,
                 id=1
             )
 
             logger.info(
-                f"Subscribed to {EVENT_SERVICE_ATTRCHANGED}. " 
+                f"Subscribed to {cls.event_service_attrchanged}. " 
                 f"Waiting for messages..."
             )
 
@@ -99,9 +106,9 @@ class ServiceEventManager:
                 wait=True
             )
 
-            logger.info(f"Sending update to {CATALOG_UPD_SERVICE}...")
+            logger.info(f"Sending update to {cls.catalog_upd_service}...")
             conn.send(
-                destination=CATALOG_UPD_SERVICE, 
+                destination=cls.catalog_upd_service, 
                 body=json.dumps(update_payload), 
                 headers=headers
             )
