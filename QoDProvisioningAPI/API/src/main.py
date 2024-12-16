@@ -36,7 +36,9 @@ logger = Config.setup_logging()
 app = FastAPI(
     title="QoD Provisioning API",
     description=(
-    "The Quality-On-Demand (QoD) Provisioning API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.\n\n"
+    "The Quality-On-Demand (QoD) Provisioning API offers a programmable "
+    "interface for developers to request the assignment of a certain QoS "
+    "Profile to a certain device, indefinitely.\n\n"
     
     "This API sets up the configuration in the network so the requested QoS profile is applied to a specified device, at any time while the provisioning is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is deleted.\n\n"
 
@@ -106,5 +108,7 @@ async def startup_event():
     ServiceEventManager.subscribe_to_events()
 
     # Initialize the CamaraResultsProcessor with the queue and start processing
-    camara_processor = CamaraResultsProcessor(ServiceEventManager.camara_results_queue)
+    camara_processor = CamaraResultsProcessor(
+        ServiceEventManager.camara_results_queue
+    )
     asyncio.create_task(camara_processor.process_results())

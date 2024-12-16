@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-# @Author: Eduardo Santos
-# @Date:   2024-11-28 15:03:52
-# @Last Modified by:   Eduardo Santos
-# @Last Modified time: 2024-12-09 14:37:49
+# @Authors: 
+#   Eduardo Santos (eduardosantoshf@av.it.pt) - ITAv, Portugal 
+#   Rafael Direito (rdireito@av.it.pt) - ITAv, Portugal
+# @Date:
+#   December 2024
 
 from sqlalchemy.orm import Session
 from database.db import SessionLocal
@@ -32,7 +33,8 @@ def retrieve_fields_to_check(device: Device) -> list:
         device: The device object that contains the fields to be checked.
 
     Returns:
-        A list of tuples, each containing the field name and its corresponding value.
+        A list of tuples, each containing the field name and its 
+        corresponding value.
     """
     return [
         ("phone_number", device.phone_number),
@@ -66,7 +68,8 @@ def find_existing_device(db: Session, fields_to_check: list) -> Device:
     """
     for field, value in fields_to_check:
         if value:  # Only search if the field has a value
-            existing_device = db.query(Device).filter_by(**{field: value}).first()
+            existing_device = db.query(Device).filter_by(**{field: value})\
+                .first()
             
             if existing_device:
                 logger.debug(f"Existing device found: {existing_device}")
@@ -79,7 +82,8 @@ def validate_device_fields(create_provisioning):
     Validates the fields in the device object and assigns them to variables.
 
     Args:
-        create_provisioning: The provisioning object containing the device to validate.
+        create_provisioning: The provisioning object containing the 
+        device to validate.
 
     Returns:
         A dictionary containing the validated fields.
@@ -119,7 +123,9 @@ def validate_device_fields(create_provisioning):
     }
 
 
-def create_provisioning(db: Session, create_provisioning: CreateProvisioning) -> Provisioning:
+def create_provisioning(
+        db: Session, create_provisioning: CreateProvisioning
+    ) -> Provisioning:
     """
     Creates a new provisioning in the database.
 
@@ -154,8 +160,8 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
             for field, value, differs in differences:
                 if differs:
                     existing_value = getattr(existing_device, field)
-                    
-                    if existing_value is None: # Field doesn't exist in the existing device
+                    # Field doesn't exist in the existing device
+                    if existing_value is None: 
                         logger.debug(
                             f"Adding new field {field} to existing device."
                         )
@@ -180,7 +186,9 @@ def create_provisioning(db: Session, create_provisioning: CreateProvisioning) ->
             # Create a new device instance using the validated fields
             new_device = Device(
                 phone_number=validated_fields['phone_number'],
-                network_access_identifier=validated_fields['network_access_identifier'],
+                network_access_identifier=validated_fields[
+                    'network_access_identifier'
+                ],
                 ipv4_public_address=validated_fields['ipv4_public_address'],
                 ipv4_private_address=validated_fields['ipv4_private_address'],
                 ipv4_public_port=validated_fields['ipv4_public_port'],
@@ -221,8 +229,8 @@ def get_all_provisionings(db: Session, provisioning_id: str) -> Provisioning:
 
     Args:
         db: Database session.
-        provisioning_id: The ID of the provisioning to query. Although it's passed, 
-                         it is not used in the query, and all provisionings are returned.
+        provisioning_id: The ID of the provisioning to query. Although it's
+        passed, it is not used in the query, and all provisionings are returned.
 
     Returns:
         A list of all provisioning records.
@@ -242,10 +250,12 @@ def update_provisioning_by_id(
         provisioning_timestamp: The timestamp when the provisioning started.
 
     Returns:
-        A tuple containing the updated Provisioning object and the associated Device object.
+        A tuple containing the updated Provisioning object and the associated
+        Device object.
 
     Raises:
-        HTTPException: If the fields of the existing device differ during an update.
+        HTTPException: If the fields of the existing device differ during an
+        update.
     """
     provisioning, device = get_provisioning_by_id(db, provisioning_id)
     if provisioning:
@@ -263,7 +273,9 @@ def update_provisioning_by_id(
             
             
 
-def get_provisioning_by_id(db: Session, provisioning_id: str) -> tuple[Provisioning, Device]:
+def get_provisioning_by_id(
+        db: Session, provisioning_id: str
+    ) -> tuple[Provisioning, Device]:
     """
     Fetch a provisioning by its ID.
 
@@ -278,10 +290,12 @@ def get_provisioning_by_id(db: Session, provisioning_id: str) -> tuple[Provision
         logger.debug(f"Received provisioning ID: {provisioning_id}\n")
 
         # Check if the provisioning exists
-        provisioning = db.query(Provisioning).filter_by(id=provisioning_id).first()
+        provisioning = db.query(Provisioning).filter_by(id=provisioning_id)\
+        .first()
 
         if provisioning:
-            device = db.query(Device).filter_by(id=provisioning.device_id).first()
+            device = db.query(Device).filter_by(id=provisioning.device_id)\
+            .first()
 
             return provisioning, device
             
@@ -298,19 +312,24 @@ def get_provisioning_by_id(db: Session, provisioning_id: str) -> tuple[Provision
         raise ValueError(f"Error fetching provisioning by ID: {e}")
 
 
-def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: RetrieveProvisioningByDevice) -> tuple[Provisioning, Device]:
+def get_provisioning_by_device(
+        db: Session,
+        retrieve_provisioning_by_device: RetrieveProvisioningByDevice
+    ) -> tuple[Provisioning, Device]:
     """
     Fetch a provisioning by device ID.
 
     Args:
         db: Database session.
-        retrieve_provisioning_by_device: The data needed to retrieve the provisioning.
+        retrieve_provisioning_by_device: The data needed to retrieve the
+        provisioning.
 
     Returns:
         The ProvisioningInfo object or None if not found.
     """
     from fastapi import HTTPException
 
+    # TODO: fix line length
     try:
         logger.debug(
             f"Received retrieve provisioning by device data: {retrieve_provisioning_by_device}\n"
@@ -336,7 +355,9 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
         # Iterate through the fields to check for the provided values and query the DB
         for field, value in fields_to_check:
             if value:  # Only search if the field has a value
-                existing_device = db.query(Device).filter_by(**{field: value}).first()
+                existing_device = db.query(Device).filter_by(**{field: value})\
+                    .first()
+                # TODO: fix line length
                 logger.debug(
                     f"Existing device found for field {field}: {existing_device}"
                 )
@@ -363,7 +384,8 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
             logger.debug(
                 "Device found and fields match, proceeding with provisioning."
             )
-            provisioning = db.query(Provisioning).filter_by(device_id=existing_device.id).first()
+            provisioning = db.query(Provisioning)\
+                .filter_by(device_id=existing_device.id).first()
 
             if provisioning:
                 return provisioning, existing_device
@@ -378,7 +400,9 @@ def get_provisioning_by_device(db: Session, retrieve_provisioning_by_device: Ret
 
 
 
-def delete_provisioning(db: Session, provisioning_id: str) -> tuple[Provisioning, Device]:
+def delete_provisioning(
+        db: Session, provisioning_id: str
+    ) -> tuple[Provisioning, Device]:
     """
     Deletes a provisioning (marks it as unavailable or removes it).
 
@@ -387,10 +411,12 @@ def delete_provisioning(db: Session, provisioning_id: str) -> tuple[Provisioning
         provisioning_id: The ID of the provisioning to delete.
     """
     try:
+        # TODO: fix line length
         logger.debug(f"Received to-be-deleted provisioning's id: {provisioning_id}\n")
 
         # Check if the provisioning exists
-        provisioning = db.query(Provisioning).filter_by(id=provisioning_id).first()
+        provisioning = db.query(Provisioning).filter_by(id=provisioning_id)\
+            .first()
 
         if not provisioning:
             logger.debug(f"Provisioning with ID {provisioning_id} not found.\n")
@@ -400,17 +426,21 @@ def delete_provisioning(db: Session, provisioning_id: str) -> tuple[Provisioning
             )
 
         # Check if the device already exists
-        related_device = db.query(Device).filter_by(id=provisioning.device_id).first()
+        related_device = db.query(Device).filter_by(id=provisioning.device_id)\
+            .first()
 
         if related_device:
             db.delete(provisioning)
             db.commit()
+            # TODO: fix line length
             logger.debug(f"Provisioning with ID {provisioning_id} has been deleted.\n")
             
             return provisioning, related_device
 
         else:
-            logger.debug(f"Provisioning with ID {provisioning_id} not found.\n")
+            logger.debug(
+                f"Provisioning with ID {provisioning_id} not found.\n"
+            )
     
     except SQLAlchemyError as e:
         db.rollback()

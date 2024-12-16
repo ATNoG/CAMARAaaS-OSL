@@ -23,11 +23,9 @@ import uuid
 from datetime import datetime
 import re
 
-
-
 class Device(Base):
     __tablename__ = 'device'
-    __table_args__ = {"extend_existing": True}  # Allow redefinition
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     phone_number = Column(String, nullable=True)
@@ -42,9 +40,9 @@ class Device(Base):
 
 class Provisioning(Base):
     __tablename__ = 'provisioning'
-    __table_args__ = {"extend_existing": True}  # Allow redefinition
+    __table_args__ = {"extend_existing": True}
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))  # Store UUID as a string
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))  
     qos_profile = Column(String(256), nullable=False)
     sink = Column(String, nullable=True)
     device_id = Column(Integer, ForeignKey('device.id'), nullable=True)

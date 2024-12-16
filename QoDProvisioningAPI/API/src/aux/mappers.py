@@ -20,7 +20,8 @@ def map_service_characteristics(provisioning, operation):
         },
         {
             "name": "qodProv.device.networkAccessIdentifier",
-            "value": {"value": provisioning.device.network_access_identifier or ""}
+            "value": {"value": provisioning.device.network_access_identifier \
+                or ""}
         },
         {
             "name": "qodProv.device.ipv4Address.publicAddress",

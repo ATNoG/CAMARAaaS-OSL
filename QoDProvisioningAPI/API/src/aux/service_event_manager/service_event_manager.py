@@ -12,7 +12,7 @@ logger = Config.setup_logging()
 # Constants for STOMP service configuration
 CATALOG_UPD_SERVICE = "CATALOG.UPD.SERVICE"
 EVENT_SERVICE_ATTRCHANGED = "EVENT.SERVICE.ATTRCHANGED"
-
+# TODO: move these variables to config
 
 def check_subscribe_connection(method):
     @wraps(method)

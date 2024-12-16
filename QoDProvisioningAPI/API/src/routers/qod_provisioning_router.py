@@ -117,6 +117,7 @@ async def create_provisioning(
     "/device-qos/{provisioningId}",
     responses={
         204: {"description": "Provisioning deleted"},
+        # TODO: fix line length
         202: {"model": ProvisioningInfo, "description": "Deletion request accepted to be processed. It applies for an async deletion process. &#x60;status&#x60; in the response will be &#x60;AVAILABLE&#x60; with &#x60;statusInfo&#x60; set to &#x60;DELETE_REQUESTED&#x60;."},
         400: {"model": ErrorInfo, "description": "Bad Request"},
         401: {"model": ErrorInfo, "description": "Unauthorized"},
@@ -131,6 +132,7 @@ async def create_provisioning(
     response_model_by_alias=True,
 )
 async def delete_provisioning(
+    # TODO: fix line length
     provisioningId: Annotated[StrictStr, Field(description="Provisioning ID that was obtained from the createProvision operation")] = Path(..., description="Provisioning ID that was obtained from the createProvision operation"),
     x_correlator: Annotated[Optional[StrictStr], Field(description="Correlation id for the different services")] = Header(None, description="Correlation id for the different services"),
     db_session: Session = Depends(get_db),
@@ -174,6 +176,7 @@ async def delete_provisioning(
 @router.get(
     "/device-qos/{provisioningId}",
     responses={
+        # TODO: fix line length
         200: {"model": ProvisioningInfo, "description": "Returns information about certain provisioning"},
         400: {"model": ErrorInfo, "description": "Bad Request"},
         401: {"model": ErrorInfo, "description": "Unauthorized"},
@@ -187,6 +190,7 @@ async def delete_provisioning(
     summary="Get QoD provisioning information",
     response_model_by_alias=True,
 )
+# TODO: fix line length
 async def get_provisioning_by_id(
     provisioningId: Annotated[StrictStr, Field(description="Provisioning ID that was obtained from the createProvision operation")] = Path(..., description="Provisioning ID that was obtained from the createProvision operation"),
     x_correlator: Annotated[Optional[StrictStr], Field(description="Correlation id for the different services")] = Header(None, description="Correlation id for the different services"),
