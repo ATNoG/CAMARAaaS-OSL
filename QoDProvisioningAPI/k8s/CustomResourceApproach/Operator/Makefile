@@ -13,8 +13,9 @@ REPOSITORY_HOST = atnog-harbor.av.it.pt/camaraaas
 KUBECONFIG ?= /etc/rancher/k3s/k3s.yaml 
 NAMESPACE = itav-slice-manager-client
 
-SERVICE_UUID = 
-
+# CAMARA
+CAMARA_API_DOCKER_IMAGE=atnog-harbor.av.it.pt/camaraaas/camaraaas-qod-provisioning-api:latest
+CAMARA_API_DOCKER_IMAGE_PORT=8000
 # DOCKER
 #
 docker-build:
@@ -43,7 +44,7 @@ terminate-local-testing-environment:
 	kubectl delete -f ../CR/crd.yaml && kubectl delete -f ./manifests/operator-namespace.yaml && kubectl delete -f ./manifests/operator-role.yaml
 
 run-local:
-	. src/venv/bin/activate && CR_GROUP="av.it.pt" CR_VERSION="v1" CR_PLURAL="camaraaas-qod-provisioning-apis" python3 src/k8s_operator.py
+	. src/venv/bin/activate && CR_GROUP="av.it.pt" CR_VERSION="v1" CR_PLURAL="camaraaas-qod-provisioning-apis" CAMARA_API_DOCKER_IMAGE=$(CAMARA_API_DOCKER_IMAGE) CAMARA_API_DOCKER_IMAGE_PORT=$(CAMARA_API_DOCKER_IMAGE_PORT) python3 src/k8s_operator.py
 
 
 # K8S Manifests

@@ -27,5 +27,10 @@ spec:
               value: "v1"
             - name: CR_PLURAL
               value: "camaraaas-qod-provisioning-apis"
+            - name: CAMARA_API_DOCKER_IMAGE
+              value: "atnog-harbor.av.it.pt/camaraaas/camaraaas-qod-provisioning-api:latest"
+            - name: CAMARA_API_DOCKER_IMAGE_PORT
+              value: "8000"
+
             
       restartPolicy: Always

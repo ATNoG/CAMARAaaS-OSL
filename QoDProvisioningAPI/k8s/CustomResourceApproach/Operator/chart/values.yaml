@@ -12,4 +12,7 @@ customResource:
   shortNames:
     - qod-provisioning-api
   version: v1
+camaraQoDAPI:
+  image: atnog-harbor.av.it.pt/camaraaas/camaraaas-qod-provisioning-api:latest
+  port: 8000
 logLevel: INFO

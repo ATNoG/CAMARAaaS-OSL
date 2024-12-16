@@ -30,6 +30,10 @@ spec:
           value: {{ quote .Values.customResource.version }}
         - name: CR_PLURAL
           value: {{ quote .Values.customResource.plural }}
+        - name: CAMARA_API_DOCKER_IMAGE
+          value: {{ quote .Values.camaraQoDAPI.image }}
+        - name: CAMARA_API_DOCKER_IMAGE_PORT
+          value: {{ quote .Values.camaraQoDAPI.port }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image:  '{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}'

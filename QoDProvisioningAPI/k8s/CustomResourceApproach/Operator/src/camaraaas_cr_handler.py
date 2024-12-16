@@ -112,8 +112,10 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
             "spec": {
                 "containers": [{
                     "name": "app-container",
-                    "image": f"{Config.camara_image_repo}/{Config.camara_image}",
-                    "ports": [{"containerPort": Config.camara_image_port}],
+                    "image": f"{Config.camara_api_docker_image}",
+                    "ports": [
+                        {"containerPort": Config.camara_api_docker_image_port}
+                    ],
                     "env": [
                         {
                             "name": "BROKER_ADDRESS",
@@ -152,8 +154,8 @@ class CAMARAaaSQoDProvisioningAPICRHandler:
                 "selector": {"app": app_label},
                 "ports": [
                     {
-                        "port": Config.camara_image_port,
-                        "targetPort": Config.camara_image_port
+                        "port": Config.camara_api_docker_image_port,
+                        "targetPort": Config.camara_api_docker_image_port
                     }
                 ],
                 "type": "NodePort"
