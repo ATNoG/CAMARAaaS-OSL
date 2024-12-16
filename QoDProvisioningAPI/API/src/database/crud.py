@@ -332,10 +332,10 @@ def get_provisioning_by_device(
     """
     from fastapi import HTTPException
 
-    # TODO: fix line length
     try:
         logger.debug(
-            f"Received retrieve provisioning by device data: {retrieve_provisioning_by_device}\n"
+            f"Received retrieve provisioning by device data: "
+            f"{retrieve_provisioning_by_device}\n"
         )
 
         # Validate if any field to search for is provided
@@ -360,9 +360,10 @@ def get_provisioning_by_device(
             if value:  # Only search if the field has a value
                 existing_device = db.query(Device).filter_by(**{field: value})\
                     .first()
-                # TODO: fix line length
+
                 logger.debug(
-                    f"Existing device found for field {field}: {existing_device}"
+                    f"Existing device found for field {field}: "
+                    f"{existing_device}"
                 )
                 
                 if existing_device:  # Stop searching as soon as we find a match
@@ -402,7 +403,6 @@ def get_provisioning_by_device(
         raise ValueError(f"Error fetching provisioning by device: {e}")
 
 
-
 def delete_provisioning(
         db: Session, provisioning_id: str
     ) -> tuple[Provisioning, Device]:
@@ -414,8 +414,9 @@ def delete_provisioning(
         provisioning_id: The ID of the provisioning to delete.
     """
     try:
-        # TODO: fix line length
-        logger.debug(f"Received to-be-deleted provisioning's id: {provisioning_id}\n")
+        logger.debug(
+            f"Received to-be-deleted provisioning's id: {provisioning_id}\n"
+        )
 
         # Check if the provisioning exists
         provisioning = db.query(Provisioning).filter_by(id=provisioning_id)\
@@ -435,8 +436,10 @@ def delete_provisioning(
         if related_device:
             db.delete(provisioning)
             db.commit()
-            # TODO: fix line length
-            logger.debug(f"Provisioning with ID {provisioning_id} has been deleted.\n")
+
+            logger.debug(
+                f"Provisioning with ID {provisioning_id} has been deleted.\n"
+            )
             
             return provisioning, related_device
 

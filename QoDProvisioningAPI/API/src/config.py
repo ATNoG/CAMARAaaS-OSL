@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Authors: 
+#   Eduardo Santos (eduardosantoshf@av.it.pt)
+#   Rafael Direito (rdireito@av.it.pt)
+# @Organization:
+#   Instituto de Telecomunicações, Aveiro (ITAv)
+#   Aveiro, Portugal
+# @Date:
+#   December 2024
+
 import os
 import sys
 import logging
@@ -11,6 +21,10 @@ class Config():
     service_uuid = os.getenv('SERVICE_UUID')
     log_level = os.getenv('LOG_LEVEL', "INFO")
     db_path = os.getenv("SQLITE_DB_PATH", "/data/sqlite.db")
+
+    # Broker topics
+    catalog_upd_service = "CATALOG.UPD.SERVICE"
+    event_service_attrchanged = "EVENT.SERVICE.ATTRCHANGED"
 
     logger = None
 
