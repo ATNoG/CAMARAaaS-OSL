@@ -36,7 +36,7 @@ class ITAvNetworkSliceManager:
                 },
                 auth=(self.username, self.password),
                 data= json.dumps(payload),
-                timeout=30
+                timeout=60
             )
             
             logger.info(
